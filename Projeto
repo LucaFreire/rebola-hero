@@ -1,0 +1,20 @@
+Fazendo Tela
+
+#Tamanho da Tela
+Largura = 640
+Altura = 480
+Tela = pygame.display.set_mode((Largura,Altura))
+pygame.display.set_caption('Hero') #Nome do Arquivo
+
+#Mantém a Tela Aberta
+while True:
+    for event in pygame.event.get():
+        if event.type == QUIT:
+            pygame.quit()
+            exit()
+
+                          #Cor RGB    X  , Y  ,Largura, Altura
+    pygame.draw.rect(Tela,(255,0,0), (200,300,40,50)) #Desenha um retângulo
+    pygame.display.update()
+
+
