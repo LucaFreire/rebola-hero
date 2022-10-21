@@ -1,42 +1,41 @@
-###Bibliotecas###
+from pygame import mixer
 
-import pygame
-from pygame.locals import *
-from sys import exit
+# Inicia o mixer
+mixer.init()
 
-lista = [50,200]
+# Carrega arquivo de audio
+mixer.music.load('music.wav')
 
-from random import choice as esc
+print("Musica começa a tocar...")
 
-pygame.init() #Inicía o Programa
+# Ajusta o som
+mixer.music.set_volume(0.2)
 
-#Tamanho da Tela
-Largura = 640
-Altura = 480
+# Inicia a musica
+mixer.music.play()
 
-Tela = pygame.display.set_mode((Largura,Altura))
-pygame.display.set_caption('Funk Hero') #Nome do Arquivo
-
-x=Largura/2
-y=0
-
-x1=0
-y1=0
-#Mantém a Tela Aberta
 while True:
-    Tela.fill((0,0,0))
-    for event in pygame.event.get():
-        if event.type == QUIT:
-            pygame.quit()
-            exit()
-                          #Cor RGB    X  , Y  ,Largura, Altura
-    pygame.draw.rect(Tela,(255,0,0), (x,y,40,50)) #Desenha um retângulo
+	print("------------------------------------------------------------------------------------")
+	print("Pressione 'p' para pausar")
+	print("Pressione 'c' para continuar")
+	print("Pressione 's' para sair")
 
-    if y>= Altura:
-        y=0
-        x= esc(lista)   #esc(5,500)
-    y+=0.20
+	# Pega input do usuário
+	userInput = input(" ")
+	
+	if userInput == 'p':
 
-    pygame.display.update()
+		# Pausa a musica
+		mixer.music.pause()	
+		print("Musica pausada...")
+	elif userInput == 'c':
 
+		# Continua a musica
+		mixer.music.unpause()
+		print("Retomando...")
+	elif userInput == 's':
 
+		# Para a musica
+		mixer.music.stop()
+		print("Musica parou...")
+		break
