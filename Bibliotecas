@@ -1,0 +1,9 @@
+# Bibliotecas
+
+from os import path   # Utilizado p/ manipulação de arquivos
+import pygame   # Biblioteca para desenvolver jogos
+import sys   # Utilizado p/ manipular diferentes partes do ambiente de tempo de execução do Python
+import math   # P/ fazer alguns cálculos
+import random   # Random
+import shelve   # Abre um dicionário com um database (Talvez não utilizaremos)
+import time   # Biblioteca p/ tempo
