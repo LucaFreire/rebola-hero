@@ -246,16 +246,83 @@ class Level(Status_Game):
                 Start = False
                 self.done = True
                 self.next = "Ver o q é"
-            
+
             # Setando Teclas False como default
             if event.type == pygame.KEYUP:
                 if event.key == pygame.K_LEFT:
                     Esquerdo_Pressionado = False
-                    
+
                 if event.key == pygame.K_RIGHT:
                     Direito_Pressionado = False
-                
+
                 if event.key == pygame.K_UP:
                     Up_Pressionado = False
-                
 
+    def Update(self, screen):
+        self.draw(screen)
+        global RedY, AzulY, RoxoY, Vacilos, Red_Movimento, Roxo_Movimento, Azul_Movimento
+
+        if Start == False:
+            Pressione_Start()
+
+        if RedY >= 574:
+            #Percas = mixer.Sound(path.join("Game Assets","missed.wav"))
+            #Percas.play()
+            Vacilos+=1
+            RedY = random.randint(-1472, -128)
+
+        if AzulY >= 574:
+            # Percas = mixer.Sound(path.join("Game Assets","missed.wav"))
+            # Percas.play()
+            Vacilos+=1
+            AzulY = random.randint(-1472, -128)
+
+        if RoxoY >= 574:
+            # Percas = mixer.Sound(path.join("Game Assets","missed.wav"))
+            # Percas.play()
+            Vacilos += 1
+            RoxoY = random.randint(-1472, -128)
+
+        if Vacilos >= 6: #Número de Vidas
+            Game_Over()
+
+            RedY = -64
+            Red_Movimento = 0
+
+            AzulY = -64
+            Azul_Movimento = 0
+
+            RoxoY = -64
+            Roxo_Movimento = 0
+
+            if Pontos > Recorde:
+                Recorde = Pontos
+
+        while Start:
+            RedY += Red_Movimento
+            RoxoY += Roxo_Movimento
+            AzulY += Azul_Movimento
+            break
+
+    def draw(self,screen):
+        global Esquerdo_Pressionado, Direito_Pressionado, Up_Pressionado
+        screen.fill((0,0,0))
+        screen.blit(Fundo_Fase,(0,0)) # Imagem de fundo da Fase
+        Bloco_Red.Insert(RedImg, RedX, RedY), Bloco_Azul.Insert(AzulImg,AzulX, AzulY), Bloco_Roxo.Insert(RoxoImg, RoxoX, RoxoY)
+
+        if Esquerdo_Pressionado == True:
+            screen.blit(EsquerdoB[1], (274,532))
+        elif Esquerdo_Pressionado == False:
+            screen.blit(EsquerdoB[0],(274, 532))
+
+        elif Direito_Pressionado == True:
+            screen.blit(DireitoB[1],(530,532))
+        elif Direito_Pressionado == False:
+            screen.blit(DireitoB[0],(530,532))
+            
+        elif Up_Pressionado == True:
+            screen.blit(UpB[1],(530,532))
+        elif Up_Pressionado == False:
+            screen.blit(UpB[0],(530,532))
+            
+   
