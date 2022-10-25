@@ -178,8 +178,84 @@ class Status_Game:
 ####### MENU AUUIIIII ########
 
 # Classe do Nível
+class Level(Status_Game):
+    def __init__(self):
+        Status_Game.__init__(self)
+        self.next = "Nivel inserido"
+    def Pygame_Evento(self, event):
+        global Start, RedY, AzulY, RoxoY, Vacilos, Red_Movimento, \
+            Azul_Movimento, Roxo_Movimento, Pontos, Direito_Pressionado,\
+            Esquerdo_Pressionado, Up_Pressionado
+        Colisao_Red = Colisao(RedX, RedY, 306, 532)
+        Colisao_Azul = Colisao(AzulX, AzulY, 434, 532)
+        Colisao_Roxo = Colisao(530, RoxoY, 562, 532)
 
+        if event.type == pygame.KEYDOWN:
 
+            # Botão para Iniciar
+            if event.key == pygame.K_SPACE:
+                Start = True
 
+            # Botão Esquerdo
+            if event.key == pygame.K_LEFT:
+                Esquerdo_Pressionado = True
+                if Colisao_Red:
+                    #SOM sound = mixer.Sound(path.join("Game Assets", "collison.wav"))
+                    # sound.play()
+                    Pontos+=1
+                    RedY = random.randint(-1472, -128)
+                    Aumentar_Dificuldade()
+                    Red_Movimento = random.uniform(IntervaloA, IntervaloB)
 
+            # Botão Direiro
+            if event.key == pygame.K_RIGHT:
+                Direito_Pressionado = True
+                if Colisao_Azul:
+                    # SOM sound = mixer.Sound(path.join("Game Assets", "collison.wav"))
+                    # sound.play()
+                    Pontos+=1
+                    AzulY = random.randint(-1472, -128)
+                    Aumentar_Dificuldade()
+                    Azul_Movimento = random.uniform(IntervaloA, IntervaloB)
+
+            # Botão UP
+            if event.key == pygame.K_UP:
+                Up_Pressionado = True
+                if Colisao_Roxo:
+                    # SOM sound = mixer.Sound(path.join("Game Assets", "collison.wav"))
+                    # sound.play()
+                    Pontos+=1
+                    RoxoY = random.randint(1472, -128)
+                    Aumentar_Dificuldade()
+                    Roxo_Movimento = random.uniform(IntervaloA, IntervaloB)
+
+            # Botão de Reset
+            if event.key == pygame.K_r:
+                Pontos = 0
+                Vacilos = 0
+                Reset()
+
+            # Ver o que é
+            if event.key == pygame.K_q:
+                Vacilos = 0
+                Pontos = 0
+                Reset()
+                # select = mixer.Sound(path.join("Game Assets","select.wav"))
+                # select.play()
+                time.sleep(.25)
+                Start = False
+                self.done = True
+                self.next = "Ver o q é"
+            
+            # Setando Teclas False como default
+            if event.type == pygame.KEYUP:
+                if event.key == pygame.K_LEFT:
+                    Esquerdo_Pressionado = False
+                    
+                if event.key == pygame.K_RIGHT:
+                    Direito_Pressionado = False
+                
+                if event.key == pygame.K_UP:
+                    Up_Pressionado = False
+                
 
