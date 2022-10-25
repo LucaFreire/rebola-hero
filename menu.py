@@ -75,8 +75,18 @@ while run:
                     position = pygame.mouse.get_pos()
 
                     if ((position[0] > 25 and position[0] < 220) and (position[1] > 373 and position[1] < 449)):
+                        mixer.music.load(path.join("sounds","entrada_leaderboard.wav"))
+                        mixer.music.play(1,0.0)
+                        while pygame.mixer.music.get_busy() == True:
+                            continue
+
                         menu = False
+
                     elif ((position[0] > 25 and position[0] < 220) and (position[1] > 510 and position[1] < 585)):
+                        mixer.music.load(path.join("sounds","entrada_leaderboard.wav"))
+                        mixer.music.play(1,0.0)
+                        while pygame.mixer.music.get_busy() == True:
+                            continue
                         pygame.quit()
                         exit()
     
@@ -97,8 +107,3 @@ while run:
 
         
     
-
-
-        
-
-
