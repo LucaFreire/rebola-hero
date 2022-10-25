@@ -1,42 +1,185 @@
-###Bibliotecas###
 
-import pygame
-from pygame.locals import *
-from sys import exit
+# Bibliotecas
 
-lista = [50,200]
+from os import path  # Utilizado p/ manipulação de arquivos
+import pygame  # Biblioteca para desenvolver jogos
+import sys  # Utilizado p/ manipular diferentes partes do ambiente de tempo de execução do Python
+import math  # P/ fazer alguns cálculos
+import random  # Random
+import shelve  # Abre um dicionário com um database
+import time  # Biblioteca p/ tempo
 
-from random import choice as esc
+pygame.init()  # Inicia o pygame
 
-pygame.init() #Inicía o Programa
+# Tela
+Tela = pygame.display.set_mode((800, 600))  # Tamanho da tela
+Tela_Fundo = pygame.image.load(path.join("GameAssets", "background.png")).convert_alpha()  # Add Tela de fundo
+Fundo_Fase = pygame.image.load(path.join("GameAssets", "background1.png")).convert_alpha()  # Add Tela de fundo fase
+Fundo_Main = pygame.image.load(path.join("GameAssets", "background2.png")).convert()  # Add Tela de fundo da main
 
-#Tamanho da Tela
-Largura = 640
-Altura = 480
+# Música
+mixer.music.load(path.join("Game Assets", "background_music.mp3"))  # Add música de fundo
+mixer.music.play(-1)  # Play na música
 
-Tela = pygame.display.set_mode((Largura,Altura))
-pygame.display.set_caption('Funk Hero') #Nome do Arquivo
+# Icone e Título
+pygame.display.set_caption("Rebola Hero")  # Título do executável
+Icone = pygame.image.load(path.join("Game Assets", "Icone.png"))  # Icone do executável
 
-x=Largura/2
-y=0
 
-x1=0
-y1=0
-#Mantém a Tela Aberta
-while True:
-    Tela.fill((0,0,0))
-    for event in pygame.event.get():
-        if event.type == QUIT:
-            pygame.quit()
-            exit()
-                          #Cor RGB    X  , Y  ,Largura, Altura
-    pygame.draw.rect(Tela,(255,0,0), (x,y,40,50)) #Desenha um retângulo
+# Classe do Bloco
+class Bloco:
+    def __init__(self, Img, ImgX, ImgY):
+        self.Img = Img
+        self.ImgX = ImgX
+        self.ImgY = ImgY
 
-    if y>= Altura:
-        y=0
-        x= esc(lista)   #esc(5,500)
-    y+=0.20
+    def Insert(self, Img, ImgX, ImgY):
+        screen.blit(Img, (ImgX, ImgY))
 
-    pygame.display.update()
+
+# Pressione Enter p/ Iniciar o Jogo
+Start = False
+Press_Start_Fonte = pygame.font.Font(path.join("Game Assets", "slkscr.ttf"), 42)  # Estilo de fonte
+
+def Pressione_Start():
+    Enter_Start = Press_Start_Fonte.render("Pressione ENTER P/ Iniciar")  # Mnesagem
+    screen.blit(Enter_Start, (130, 280))  # Localização da Mensagem
+
+
+# Pontuação
+Pontos = 0
+Fonte = pygame, font.Font(path.join("Game Assets", "slkscr.ttf"), 36)
+TextoX = 10
+TextoY = 10
+
+def Mostrar_Pontos(x, y):
+    Ponto = font.render("Pontuação: " + str(Pontos), True, (0, 255, 0))
+    screen.blit(Ponto, (x, y))
+
+
+# Recorde
+Recorde = shelve.open("game_data")
+AltoX = 10
+AltoY = 100
+
+def Recorde_Pessoal(x, y, level):
+    AltoS = font.render("Recorde: " + str(Recorde)[level], True, (255, 255, 0))
+    screen.blit(AltoS, (x, y))
+
+
+# Vidas (Vaciladas)
+Vacilos = 0
+VacilosX = 10
+VacilosX = 55
+
+
+def Mostrar_Vacilos(x, y, num):
+    Vacilo = font.render("Vacilos: " + str(Vacilos) + "/" + str(num), True, (255, 0, 0))
+    screen.blit(Vacilo, (x, y))
+
+
+# Game Over
+Game_Over_Fonte = pygame.font.Font(path.join("Game Assets", "slkscr.ttf"), 80)
+
+def Game_Over():
+    Game_Over_Texto = Game_Over_Fonte.render("Perdeu Playboy", True, (255, 0, 0))
+    screen.blit(Game_Over_Texto, (160, 250))
+    Reset_Text = font.render("Pressione 'R' P/ REINICIAR", True, (255, 255, 255))
+    screen.blit(Reset_Text, (200, 350))
+    Retorno_Texto = font.render("Pressione 'F' P/ SAIR")
+    screen.blit(Retorno_Texto, (205, 400))
+
+
+# Velocidade Inicial
+IntervaloA = 2.8
+IntervaloB = 3.8
+
+# Blocos Vermelhos
+RedImg = pygame.image.load(path.join("Game Assets", "red_block.png")).convert()
+RedX = 274
+RedY = 274
+RedY = random.randint(-1472, -128)
+Red_Movimento = random.uniform(IntervaloA, IntervaloB)
+Bloco_Red = Block(RedImg, RedX, RedY)
+
+# Blocos Azul
+AzulImg = pygame.image.load(path.join("Game Assets", "azul_block.png")).convert()
+AzulX = 462
+AzulY = random.randint(-1472, -128)
+Azul_Movimento = random.uniform(IntervaloA, IntervaloB)
+Bloco_Azul = Block(AzulImg, AzulX, AzulY)
+
+# Blocos Roxo
+RoxoImg = pygame.image.load(path.join("Game Assets", "roxo_block.png")).convert()
+RoxoX = 402
+RoxoY = random.randint(-1472, -128)
+Roxo_Movimento = random.uniform(IntervaloA, IntervaloB)
+Bloco_Roxo = Block(RoxoImg, RoxoX, RoxoY)
+
+# Botão Esquerdo
+EsquerdoImg = pygame.image.load(path.join("Game Assets","Botao_Esquerod_Img.png")).convert_alpha()
+Esquerdo_Pressionado_Img = pygame.image.load(path.join("Game Assets","Botão_Esquerdo_Pressionado.png"))
+EsquerdoB = [EsquerdoImg, Esquerdo_Pressionado_Img]
+Esquerdo_Pressionado = False
+
+# Botão Direito
+DireitoImg = pygame.image.load(path.join("Game Assets","Botao_Direito_Img.png")).convert_alpha()
+Direito_Pressionado_Img = pygame.image.load(path.join("Game Assets","Botão_Direito_Pressionado.png"))
+DireitoB = [DireitoImg, Direito_Pressionado_Img]
+Direito_Pressionado = False
+
+# Botão Up
+UpImg = pygame.image.load(path.join("Game Assets","Botao_Up_Img.png")).convert_alpha()
+Up_Pressionado_Img = pygame.image.load(path.join("Game Assets","Botão_Up_Pressionado.png"))
+UpB = [UpImg, Up_Pressionado_Img]
+Up_Pressionado = False
+
+# Sistema de Colisão
+def Colisao(BlocoX, BlocoY, BotaoX, BotaoY):
+    distancia = math.sqrt((math.pow(BlocoX-BotaoX,2)) + (math.pow(BlocoY - BotaoY,2))) # Cálculo de Colisão
+    if distancia < 72:
+        return True
+    else:
+        return False
+
+# Mudança de Dificuldade
+def Aumentar_Dificuldade():
+    global IntervaloA
+    global IntervaloB
+    if Pontos % 10 == 0: # A Dificuldade aumenta a cada 10 pontos Conquistados
+        IntervaloA += 0.45
+        IntervaloB += 0.45
+
+# Reseta Tudo
+def Reset():
+    global IntervaloA, IntervaloB, RedX, Red_Movimento, AzulX, Azul_Movimento, RoxoX ,Roxo_Movimento
+    IntervaloA = 2.8
+    IntervaloB = 3.8
+
+    RedY = random.randint(-1472, -128)
+    Red_Movimento = random.uniform(IntervaloA, IntervaloB)
+
+    AzulX = random.randint(-1472, -128)
+    Azul_Movimento = random.uniform(IntervaloA, IntervaloB)
+
+    RoxoX = random.randint(-1472, -128)
+    Roxo_Movimento = random.uniform(IntervaloA, IntervaloB)
+
+# Classe Status do Game
+class Status_Game:
+    def __init__(self):
+        self.done = False
+        self.next = None
+        self.quit = False
+        self.previous = None
+
+
+# Classe do Menu
+####### MENU AUUIIIII ########
+
+# Classe do Nível
+
+
+
 
 
