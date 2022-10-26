@@ -1,3 +1,4 @@
+
 # Bibliotecas
 
 from os import path  # Utilizado p/ manipulação de arquivos
@@ -17,8 +18,8 @@ Fundo_Fase = pygame.image.load(path.join("GameAssets", "background1.png")).conve
 Fundo_Main = pygame.image.load(path.join("GameAssets", "background2.png")).convert()  # Add Tela de fundo da main
 
 # Música
-mixer.music.load(path.join("Game Assets", "background_music.mp3"))  # Add música de fundo
-mixer.music.play(-1)  # Play na música
+#mixer.music.load(path.join("Game Assets", "background_music.mp3"))  # Add música de fundoa
+#mixer.music.play(-1)  # Play na música
 
 # Icone e Título
 pygame.display.set_caption("Rebola Hero")  # Título do executável
@@ -32,41 +33,38 @@ class Bloco:
         self.ImgX = ImgX
         self.ImgY = ImgY
 
-    def Insert(self, Img, ImgX, ImgY):
-        screen.blit(Img, (ImgX, ImgY))
+    def Insert(self, Img, ImgX, ImgY): # Função add Bloco
+        Tela.blit(Img, (ImgX, ImgY))
 
 
 # Pressione Enter p/ Iniciar o Jogo
 Start = False
 Press_Start_Fonte = pygame.font.Font(path.join("Game Assets", "slkscr.ttf"), 42)  # Estilo de fonte
 
-
 def Pressione_Start():
-    Enter_Start = Press_Start_Fonte.render("Pressione ENTER P/ Iniciar")  # Mnesagem
-    screen.blit(Enter_Start, (130, 280))  # Localização da Mensagem
+    Enter_Start = Press_Start_Fonte.render("Pressione ENTER P/ Iniciar")  # Mensagem
+    Tela.blit(Enter_Start, (130, 280))  # Localização da Mensagem
 
 
 # Pontuação
 Pontos = 0
-Fonte = pygame, font.Font(path.join("Game Assets", "slkscr.ttf"), 36)
-TextoX = 10
-TextoY = 10
-
+Fonte = pygame.font.Font(path.join("Game Assets", "slkscr.ttf"), 36) # Estilo de Fonte
+TextoX = 10 # Tamanho ou Localização da Fonte
+TextoY = 10 # Tamanho ou Localização da Fonte
 
 def Mostrar_Pontos(x, y):
-    Ponto = font.render("Pontuação: " + str(Pontos), True, (0, 255, 0))
-    screen.blit(Ponto, (x, y))
+    Ponto = Fonte.render("Pontuação: " + str(Pontos), True, (0, 255, 0))
+    Tela.blit(Ponto, (x, y))
 
 
 # Recorde
-Recorde = shelve.open("game_data")
+Recorde = 0 #shelve.open('game_data')
 AltoX = 10
 AltoY = 100
 
-
 def Recorde_Pessoal(x, y, level):
-    AltoS = font.render("Recorde: " + str(Recorde)[level], True, (255, 255, 0))
-    screen.blit(AltoS, (x, y))
+    AltoS = Fonte.render("Recorde: " + str(Recorde)[level], True, (255, 255, 0))
+    Tela.blit(AltoS, (x, y))
 
 
 # Vidas (Vaciladas)
@@ -76,8 +74,8 @@ VacilosY = 55
 
 
 def Mostrar_Vacilos(x, y, num):
-    Vacilo = font.render("Vacilos: " + str(Vacilos) + "/" + str(num), True, (255, 0, 0))
-    screen.blit(Vacilo, (x, y))
+    Vacilo = Fonte.render("Vacilos: " + str(Vacilos) + "/" + str(num), True, (255, 0, 0))
+    Tela.blit(Vacilo, (x, y))
 
 
 # Game Over
@@ -86,11 +84,11 @@ Game_Over_Fonte = pygame.font.Font(path.join("Game Assets", "slkscr.ttf"), 80)
 
 def Game_Over():
     Game_Over_Texto = Game_Over_Fonte.render("Perdeu Playboy", True, (255, 0, 0))
-    screen.blit(Game_Over_Texto, (160, 250))
-    Reset_Text = font.render("Pressione 'R' P/ REINICIAR", True, (255, 255, 255))
-    screen.blit(Reset_Text, (200, 350))
-    Retorno_Texto = font.render("Pressione 'F' P/ SAIR")
-    screen.blit(Retorno_Texto, (205, 400))
+    Tela.blit(Game_Over_Texto, (160, 250))
+    Reset_Text = Fonte.render("Pressione 'R' P/ REINICIAR", True, (255, 255, 255))
+    Tela.blit(Reset_Text, (200, 350))
+    Retorno_Texto = Fonte.render("Pressione 'F' P/ SAIR")
+    Tela.blit(Retorno_Texto, (205, 400))
 
 
 # Velocidade Inicial
@@ -103,21 +101,21 @@ RedX = 274
 RedY = 274
 RedY = random.randint(-1472, -128)
 Red_Movimento = random.uniform(IntervaloA, IntervaloB)
-Bloco_Red = Block(RedImg, RedX, RedY)
+Bloco_Red = Bloco(RedImg, RedX, RedY)
 
 # Blocos Azul
 AzulImg = pygame.image.load(path.join("Game Assets", "azul_block.png")).convert()
 AzulX = 462
 AzulY = random.randint(-1472, -128)
 Azul_Movimento = random.uniform(IntervaloA, IntervaloB)
-Bloco_Azul = Block(AzulImg, AzulX, AzulY)
+Bloco_Azul = Bloco(AzulImg, AzulX, AzulY)
 
 # Blocos Roxo
 RoxoImg = pygame.image.load(path.join("Game Assets", "roxo_block.png")).convert()
 RoxoX = 402
 RoxoY = random.randint(-1472, -128)
 Roxo_Movimento = random.uniform(IntervaloA, IntervaloB)
-Bloco_Roxo = Block(RoxoImg, RoxoX, RoxoY)
+Bloco_Roxo = Bloco(RoxoImg, RoxoX, RoxoY)
 
 # Botão Esquerdo
 EsquerdoImg = pygame.image.load(path.join("Game Assets", "Botao_Esquerod_Img.png")).convert_alpha()
@@ -268,7 +266,7 @@ class Level(Status_Game):
 
     def Update(self, Tela):
         self.draw(Tela)
-        global RedY, AzulY, RoxoY, Vacilos, Red_Movimento, Roxo_Movimento, Azul_Movimento
+        global RedY, AzulY, RoxoY, Vacilos, Red_Movimento, Roxo_Movimento, Azul_Movimento, Recorde
 
         if Start == False:
             Pressione_Start()
@@ -334,7 +332,7 @@ class Level(Status_Game):
         elif Up_Pressionado == False:
             Tela.blit(UpB[0], (530, 532))
 
-        Mostrar_Pontos(TextoX,TextoY ), Mostrar_Vacilos(VacilosX, VacilosY, 6), Recorde_Pessoal(AltoX, AltoY, "Level")
+        Mostrar_Pontos(TextoX, TextoY), Mostrar_Vacilos(VacilosX, VacilosY, 6), Recorde_Pessoal(AltoX, AltoY, "Level")
 
 
 class Controle_Jogo:
@@ -361,7 +359,7 @@ class Controle_Jogo:
             self.done = True
         elif self.state.done:
             self.Troca()
-        self.state.update(self.screen, dt)
+        self.state.update(self.Tela, dt)
 
     def Loop(self):
         for Eventos in pygame.event.get():
@@ -376,7 +374,8 @@ class Controle_Jogo:
             self.Update(Tempo)
             pygame.display.Update()
 
-Game = GameControl()
+
+Game = Controle_Jogo()
 levels = {
     'main_menu': "Menu()",
     'Segunda Tela': "Segunda_Tela()",
