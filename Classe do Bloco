@@ -1,0 +1,10 @@
+# Classe do Bloco
+class Bloco:
+    def __init__(self, Img, ImgX, ImgY):
+        self.Img = Img
+        self.ImgX = ImgX
+        self.ImgY = ImgY
+
+    def Insert(self, Img, ImgX, ImgY): # Função add Bloco
+        Tela.blit(Img, (ImgX, ImgY))
+        
