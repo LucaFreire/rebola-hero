@@ -1,4 +1,3 @@
-
 # Bibliotecas
 
 from os import path  # Utilizado p/ manipulação de arquivos
@@ -41,6 +40,7 @@ class Bloco:
 Start = False
 Press_Start_Fonte = pygame.font.Font(path.join("Game Assets", "slkscr.ttf"), 42)  # Estilo de fonte
 
+
 def Pressione_Start():
     Enter_Start = Press_Start_Fonte.render("Pressione ENTER P/ Iniciar")  # Mnesagem
     screen.blit(Enter_Start, (130, 280))  # Localização da Mensagem
@@ -52,6 +52,7 @@ Fonte = pygame, font.Font(path.join("Game Assets", "slkscr.ttf"), 36)
 TextoX = 10
 TextoY = 10
 
+
 def Mostrar_Pontos(x, y):
     Ponto = font.render("Pontuação: " + str(Pontos), True, (0, 255, 0))
     screen.blit(Ponto, (x, y))
@@ -62,6 +63,7 @@ Recorde = shelve.open("game_data")
 AltoX = 10
 AltoY = 100
 
+
 def Recorde_Pessoal(x, y, level):
     AltoS = font.render("Recorde: " + str(Recorde)[level], True, (255, 255, 0))
     screen.blit(AltoS, (x, y))
@@ -70,7 +72,7 @@ def Recorde_Pessoal(x, y, level):
 # Vidas (Vaciladas)
 Vacilos = 0
 VacilosX = 10
-VacilosX = 55
+VacilosY = 55
 
 
 def Mostrar_Vacilos(x, y, num):
@@ -80,6 +82,7 @@ def Mostrar_Vacilos(x, y, num):
 
 # Game Over
 Game_Over_Fonte = pygame.font.Font(path.join("Game Assets", "slkscr.ttf"), 80)
+
 
 def Game_Over():
     Game_Over_Texto = Game_Over_Fonte.render("Perdeu Playboy", True, (255, 0, 0))
@@ -117,42 +120,45 @@ Roxo_Movimento = random.uniform(IntervaloA, IntervaloB)
 Bloco_Roxo = Block(RoxoImg, RoxoX, RoxoY)
 
 # Botão Esquerdo
-EsquerdoImg = pygame.image.load(path.join("Game Assets","Botao_Esquerod_Img.png")).convert_alpha()
-Esquerdo_Pressionado_Img = pygame.image.load(path.join("Game Assets","Botão_Esquerdo_Pressionado.png"))
+EsquerdoImg = pygame.image.load(path.join("Game Assets", "Botao_Esquerod_Img.png")).convert_alpha()
+Esquerdo_Pressionado_Img = pygame.image.load(path.join("Game Assets", "Botão_Esquerdo_Pressionado.png"))
 EsquerdoB = [EsquerdoImg, Esquerdo_Pressionado_Img]
 Esquerdo_Pressionado = False
 
 # Botão Direito
-DireitoImg = pygame.image.load(path.join("Game Assets","Botao_Direito_Img.png")).convert_alpha()
-Direito_Pressionado_Img = pygame.image.load(path.join("Game Assets","Botão_Direito_Pressionado.png"))
+DireitoImg = pygame.image.load(path.join("Game Assets", "Botao_Direito_Img.png")).convert_alpha()
+Direito_Pressionado_Img = pygame.image.load(path.join("Game Assets", "Botão_Direito_Pressionado.png"))
 DireitoB = [DireitoImg, Direito_Pressionado_Img]
 Direito_Pressionado = False
 
 # Botão Up
-UpImg = pygame.image.load(path.join("Game Assets","Botao_Up_Img.png")).convert_alpha()
-Up_Pressionado_Img = pygame.image.load(path.join("Game Assets","Botão_Up_Pressionado.png"))
+UpImg = pygame.image.load(path.join("Game Assets", "Botao_Up_Img.png")).convert_alpha()
+Up_Pressionado_Img = pygame.image.load(path.join("Game Assets", "Botão_Up_Pressionado.png"))
 UpB = [UpImg, Up_Pressionado_Img]
 Up_Pressionado = False
 
+
 # Sistema de Colisão
 def Colisao(BlocoX, BlocoY, BotaoX, BotaoY):
-    distancia = math.sqrt((math.pow(BlocoX-BotaoX,2)) + (math.pow(BlocoY - BotaoY,2))) # Cálculo de Colisão
+    distancia = math.sqrt((math.pow(BlocoX - BotaoX, 2)) + (math.pow(BlocoY - BotaoY, 2)))  # Cálculo de Colisão
     if distancia < 72:
         return True
     else:
         return False
 
+
 # Mudança de Dificuldade
 def Aumentar_Dificuldade():
     global IntervaloA
     global IntervaloB
-    if Pontos % 10 == 0: # A Dificuldade aumenta a cada 10 pontos Conquistados
+    if Pontos % 10 == 0:  # A Dificuldade aumenta a cada 10 pontos Conquistados
         IntervaloA += 0.45
         IntervaloB += 0.45
 
+
 # Reseta Tudo
 def Reset():
-    global IntervaloA, IntervaloB, RedX, Red_Movimento, AzulX, Azul_Movimento, RoxoX ,Roxo_Movimento
+    global IntervaloA, IntervaloB, RedX, Red_Movimento, AzulX, Azul_Movimento, RoxoX, Roxo_Movimento
     IntervaloA = 2.8
     IntervaloB = 3.8
 
@@ -164,6 +170,7 @@ def Reset():
 
     RoxoX = random.randint(-1472, -128)
     Roxo_Movimento = random.uniform(IntervaloA, IntervaloB)
+
 
 # Classe Status do Game
 class Status_Game:
@@ -182,9 +189,10 @@ class Level(Status_Game):
     def __init__(self):
         Status_Game.__init__(self)
         self.next = "Nivel inserido"
+
     def Pygame_Evento(self, event):
         global Start, RedY, AzulY, RoxoY, Vacilos, Red_Movimento, \
-            Azul_Movimento, Roxo_Movimento, Pontos, Direito_Pressionado,\
+            Azul_Movimento, Roxo_Movimento, Pontos, Direito_Pressionado, \
             Esquerdo_Pressionado, Up_Pressionado
         Colisao_Red = Colisao(RedX, RedY, 306, 532)
         Colisao_Azul = Colisao(AzulX, AzulY, 434, 532)
@@ -200,9 +208,9 @@ class Level(Status_Game):
             if event.key == pygame.K_LEFT:
                 Esquerdo_Pressionado = True
                 if Colisao_Red:
-                    #SOM sound = mixer.Sound(path.join("Game Assets", "collison.wav"))
+                    # SOM sound = mixer.Sound(path.join("Game Assets", "collison.wav"))
                     # sound.play()
-                    Pontos+=1
+                    Pontos += 1
                     RedY = random.randint(-1472, -128)
                     Aumentar_Dificuldade()
                     Red_Movimento = random.uniform(IntervaloA, IntervaloB)
@@ -213,7 +221,7 @@ class Level(Status_Game):
                 if Colisao_Azul:
                     # SOM sound = mixer.Sound(path.join("Game Assets", "collison.wav"))
                     # sound.play()
-                    Pontos+=1
+                    Pontos += 1
                     AzulY = random.randint(-1472, -128)
                     Aumentar_Dificuldade()
                     Azul_Movimento = random.uniform(IntervaloA, IntervaloB)
@@ -224,7 +232,7 @@ class Level(Status_Game):
                 if Colisao_Roxo:
                     # SOM sound = mixer.Sound(path.join("Game Assets", "collison.wav"))
                     # sound.play()
-                    Pontos+=1
+                    Pontos += 1
                     RoxoY = random.randint(1472, -128)
                     Aumentar_Dificuldade()
                     Roxo_Movimento = random.uniform(IntervaloA, IntervaloB)
@@ -258,23 +266,23 @@ class Level(Status_Game):
                 if event.key == pygame.K_UP:
                     Up_Pressionado = False
 
-    def Update(self, screen):
-        self.draw(screen)
+    def Update(self, Tela):
+        self.draw(Tela)
         global RedY, AzulY, RoxoY, Vacilos, Red_Movimento, Roxo_Movimento, Azul_Movimento
 
         if Start == False:
             Pressione_Start()
 
         if RedY >= 574:
-            #Percas = mixer.Sound(path.join("Game Assets","missed.wav"))
-            #Percas.play()
-            Vacilos+=1
+            # Percas = mixer.Sound(path.join("Game Assets","missed.wav"))
+            # Percas.play()
+            Vacilos += 1
             RedY = random.randint(-1472, -128)
 
         if AzulY >= 574:
             # Percas = mixer.Sound(path.join("Game Assets","missed.wav"))
             # Percas.play()
-            Vacilos+=1
+            Vacilos += 1
             AzulY = random.randint(-1472, -128)
 
         if RoxoY >= 574:
@@ -283,7 +291,7 @@ class Level(Status_Game):
             Vacilos += 1
             RoxoY = random.randint(-1472, -128)
 
-        if Vacilos >= 6: #Número de Vidas
+        if Vacilos >= 6:  # Número de Vidas
             Game_Over()
 
             RedY = -64
@@ -304,25 +312,78 @@ class Level(Status_Game):
             AzulY += Azul_Movimento
             break
 
-    def draw(self,screen):
+    def draw(self, Tela):
         global Esquerdo_Pressionado, Direito_Pressionado, Up_Pressionado
-        screen.fill((0,0,0))
-        screen.blit(Fundo_Fase,(0,0)) # Imagem de fundo da Fase
-        Bloco_Red.Insert(RedImg, RedX, RedY), Bloco_Azul.Insert(AzulImg,AzulX, AzulY), Bloco_Roxo.Insert(RoxoImg, RoxoX, RoxoY)
+        Tela.fill((0, 0, 0))
+        Tela.blit(Fundo_Fase, (0, 0))  # Imagem de fundo da Fase
+        Bloco_Red.Insert(RedImg, RedX, RedY), Bloco_Azul.Insert(AzulImg, AzulX, AzulY), Bloco_Roxo.Insert(RoxoImg,
+                                                                                                          RoxoX, RoxoY)
 
         if Esquerdo_Pressionado == True:
-            screen.blit(EsquerdoB[1], (274,532))
+            Tela.blit(EsquerdoB[1], (274, 532))
         elif Esquerdo_Pressionado == False:
-            screen.blit(EsquerdoB[0],(274, 532))
+            Tela.blit(EsquerdoB[0], (274, 532))
 
         elif Direito_Pressionado == True:
-            screen.blit(DireitoB[1],(530,532))
+            Tela.blit(DireitoB[1], (530, 532))
         elif Direito_Pressionado == False:
-            screen.blit(DireitoB[0],(530,532))
-            
+            Tela.blit(DireitoB[0], (530, 532))
+
         elif Up_Pressionado == True:
-            screen.blit(UpB[1],(530,532))
+            Tela.blit(UpB[1], (530, 532))
         elif Up_Pressionado == False:
-            screen.blit(UpB[0],(530,532))
-            
-   
+            Tela.blit(UpB[0], (530, 532))
+
+        Mostrar_Pontos(TextoX,TextoY ), Mostrar_Vacilos(VacilosX, VacilosY, 6), Recorde_Pessoal(AltoX, AltoY, "Level")
+
+
+class Controle_Jogo:
+    def __init__(self):
+        self.__dict__.Update()
+        self.done = False
+        self.Tela = pygame.display.set_mode((800, 600))
+        self.clock = pygame.time.Clock()
+
+    def Setup(self, Levels, Menu_Principal):
+        self.Levels = Levels
+        self.Levels_Nome = Menu_Principal
+        self.state = self.Levels[self.Levels_Nome]
+
+    def Troca(self):
+        self.state.done = False
+        previous = self.Levels_Nome
+        self.Levels_Nome = self.state.next
+        self.state = self.Levels[self.Levels_Nome]
+        self.state.previous = previous
+
+    def Update(self, dt):
+        if self.state.quit:
+            self.done = True
+        elif self.state.done:
+            self.Troca()
+        self.state.update(self.screen, dt)
+
+    def Loop(self):
+        for Eventos in pygame.event.get():
+            if Eventos.type == pygame.QUIT:
+                self.done = True
+            self.state.Pygame_Evento(Eventos)
+
+    def Loop_Principal(self):
+        while not self.done:
+            Tempo = self.clock.tick(120) / 1000.0
+            self.Loop()
+            self.Update(Tempo)
+            pygame.display.Update()
+
+Game = GameControl()
+levels = {
+    'main_menu': "Menu()",
+    'Segunda Tela': "Segunda_Tela()",
+    'Level': Level()
+}
+
+Game.Setup(levels, 'main_menu')
+Game.Loop_Principal()
+pygame.quit()
+sys.exit()
