@@ -1,0 +1,38 @@
+class Controle_Jogo:
+    def __init__(self):
+        self.__dict__.Update()
+        self.done = False
+        self.Tela = pygame.display.set_mode((800, 600))
+        self.clock = pygame.time.Clock()
+
+    def Setup(self, Levels, Menu_Principal):
+        self.Levels = Levels
+        self.Levels_Nome = Menu_Principal
+        self.state = self.Levels[self.Levels_Nome]
+
+    def Troca(self):
+        self.state.done = False
+        previous = self.Levels_Nome
+        self.Levels_Nome = self.state.next
+        self.state = self.Levels[self.Levels_Nome]
+        self.state.previous = previous
+
+    def Update(self, dt):
+        if self.state.quit:
+            self.done = True
+        elif self.state.done:
+            self.Troca()
+        self.state.update(self.Tela, dt)
+
+    def Loop(self):
+        for Eventos in pygame.event.get():
+            if Eventos.type == pygame.QUIT:
+                self.done = True
+            self.state.Pygame_Evento(Eventos)
+
+    def Loop_Principal(self):
+        while not self.done:
+            Tempo = self.clock.tick(120) / 1000.0
+            self.Loop()
+            self.Update(Tempo)
+            pygame.display.Update()
