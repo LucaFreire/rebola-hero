@@ -3,95 +3,31 @@ import random
 from os import path
 import math
 import sys
+import shelve
 import time
 from pygame import mixer
+
+pygame.init()
 
 tela = pygame.display.set_mode((800, 600))
 pontos_atuais = 0
 
-pygame.init()
+level1 = pygame.image.load("./images/jesuis.png").convert_alpha()
+main_menu = pygame.image.load("./images/07.png").convert_alpha()
 fonte = pygame.font.Font('disposabledroid-bb.regular.ttf', 108)
 
-# Classe Status do Game
-class Status_Game:
-    def __init__(self):
-        self.done = False
-        self.next = None
-        self.quit = False
-        self.previous = None
-
-class Menu(Status_Game):
-    def __init__(self):
-        Status_Game.__init__(self)
-        self.next = "main_menu"
-    def Pygame_Evento(self, event):
-        
-        if event.type == pygame.MOUSEBUTTONDOWN:
-            position = pygame.mouse.get_pos() 
-
-            # Se o mouse clicar e estiver na área do start, tocar efeito sonoto e desativa menu
-            if ((position[0] > 25 and position[0] < 220) and (position[1] > 373 and position[1] < 449)):
-                mixer.music.load(path.join("sounds","entrada_leaderboard.wav"))
-                mixer.music.play(1,0.0)
-                self.next = "leaderBoard"
-                self.done = True
-            
-            # se o mouse clicar e estivar no quit, tocar efeito sonoro e sair
-            elif ((position[0] > 25 and position[0] < 220) and (position[1] > 510 and position[1] < 585)):
-                mixer.music.load(path.join("sounds","entrada_leaderboard.wav"))
-                mixer.music.play(1,0.0)
-                pygame.quit()
-                exit()
-
-    def update(self, screen, dt):
-        self.draw(screen)
-    def draw(self, screen):
-        screen.fill((0,0,0))
-        main_menu = pygame.image.load("./images/07.png")
-        screen.blit(main_menu, (0, 0))
-
-class leaderBoard(Status_Game):
-    def __init__(self):
-        Status_Game.__init__(self)
-        self.next = "leaderBoard"
-    def Pygame_Evento(self, event):
-
-        level_1 = pygame.Rect(50, 290, 190, 200)
-
-        if event.type == pygame.MOUSEBUTTONDOWN:
-            pos = pygame.mouse.get_pos()
-            if level_1.collidepoint(pos):
-                select = mixer.Sound(path.join("sounds","entrada_leaderboard.wav"))
-                select.play()
-                time.sleep(.25)
-                self.next = "level1"
-                self.done = True
-
-        if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_q:
-                select = mixer.Sound(path.join("sounds","entrada_leaderboard.wav"))
-                select.play()
-                time.sleep(.25)
-                self.next = "main_menu"
-                self.done = True
-    def update(self, screen, dt):
-        self.draw(screen)
-    def draw(self, screen):
-        screen.fill((0,0,0))
-
-TextoX = 10
-TextoY = 10
-Recorde = 13 
-AltoX = 10
-AltoY = 100
-
-def Mostrar_Pontos(x, y):
-    Ponto = fonte.render("Pontuação: " + str(pontos_atuais), True, (0, 255, 0))
-    tela.blit(Ponto, (x, y))
-
-def Recorde_Pessoal(x, y, level):
-    AltoS = fonte.render("Recorde: " + str(Recorde)[level], True, (255, 255, 0))
-    tela.blit(AltoS, (x, y))
+start = False
+pontuacao = 0
+textoX = 10
+textoY = 10
+recorde = 15
+recordeX = 10
+recordeY = 100
+vacilos = 0 
+vacilosX = 10
+vacilosY = 55
+intervaloA = 2.8
+intervaloB = 3.8
 
 class Bloco:
     def __init__(self, Img, ImgX, ImgY):
@@ -102,29 +38,20 @@ class Bloco:
     def Insert(self, Img, ImgX, ImgY): # Função add Bloco
         tela.blit(Img, (ImgX, ImgY))
 
-Fundo_Fase = pygame.image.load(path.join("images", "jesuis.png")).convert_alpha()
-
 def Pressione_Start():
     Enter_Start = fonte.render("Pressione ENTER P/ Iniciar")  # Mensagem
     tela.blit(Enter_Start, (130, 280))  # Localização da Mensagem
 
-# Recorde
-# Recorde = 0 #shelve.open('game_data')
-# AltoX = 10
-# AltoY = 100
+def Mostrar_Pontos(x, y):
+    Ponto = fonte.render("Pontuação: " + str(pontos_atuais), True, (0, 255, 0))
+    tela.blit(Ponto, (x, y))
 
-# def Recorde_Pessoal(x, y, level):
-#     AltoS = fonte.render("Recorde: " + str(Recorde)[level], True, (255, 255, 0))
-#     tela.blit(AltoS, (x, y))
-
-# Vidas (Vaciladas)
-Vacilos = 0
-VacilosX = 10
-VacilosY = 55
-
+def Recorde_Pessoal(x, y, level):
+    AltoS = fonte.render("Recorde: " + str(recorde)[level], True, (255, 255, 0))
+    tela.blit(AltoS, (x, y))
 
 def Mostrar_Vacilos(x, y, num):
-    Vacilo = fonte.render("Vacilos: " + str(Vacilos) + "/" + str(num), True, (255, 0, 0))
+    Vacilo = fonte.render("Vacilos: " + str(vacilos) + "/" + str(num), True, (255, 0, 0))
     tela.blit(Vacilo, (x, y))
 
 def Game_Over():
@@ -135,30 +62,26 @@ def Game_Over():
     Retorno_Texto = fonte.render("Pressione 'F' P/ SAIR")
     tela.blit(Retorno_Texto, (205, 400))
 
-# Velocidade Inicial
-IntervaloA = 2.8
-IntervaloB = 3.8
-
 # Blocos Vermelhos
 RedImg = pygame.image.load(path.join("images", "bloco_vermelho.png")).convert()
 RedX = 274
 RedY = 274
 RedY = random.randint(-1472, -128)
-Red_Movimento = random.uniform(IntervaloA, IntervaloB)
+Red_Movimento = random.uniform(intervaloA, intervaloB)
 Bloco_Red = Bloco(RedImg, RedX, RedY)
 
 # Blocos Azul
 AzulImg = pygame.image.load(path.join("images", "bloco_azul.png")).convert()
 AzulX = 462
 AzulY = random.randint(-1472, -128)
-Azul_Movimento = random.uniform(IntervaloA, IntervaloB)
+Azul_Movimento = random.uniform(intervaloA, intervaloB)
 Bloco_Azul = Bloco(AzulImg, AzulX, AzulY)
 
 # Blocos Roxo
 RoxoImg = pygame.image.load(path.join("images", "bloco_roxo.png")).convert()
 RoxoX = 402
 RoxoY = random.randint(-1472, -128)
-Roxo_Movimento = random.uniform(IntervaloA, IntervaloB)
+Roxo_Movimento = random.uniform(intervaloA, intervaloB)
 Bloco_Roxo = Bloco(RoxoImg, RoxoX, RoxoY)
 
 # Botão Esquerdo
@@ -210,65 +133,148 @@ def Reset():
     RoxoX = random.randint(-1472, -128)
     Roxo_Movimento = random.uniform(IntervaloA, IntervaloB)
 
+# Classe Status do Game
+class Status_Game:
+    def __init__(self):
+        self.done = False
+        self.next = None
+        self.quit = False
+        self.previous = None
 
-# Classe do Nível
-class Level(Status_Game):
+class Menu(Status_Game):
+    def __init__(self):
+        Status_Game.__init__(self)
+        self.next = "main_menu"
+    def Pygame_Evento(self, event):
+        
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            position = pygame.mouse.get_pos() 
+
+            # Se o mouse clicar e estiver na área do start, tocar efeito sonoto e desativa menu
+            if ((position[0] > 25 and position[0] < 220) and (position[1] > 373 and position[1] < 449)):
+
+                mixer.music.load(path.join("sounds","entrada_leaderboard.wav"))
+                mixer.music.play(1,0.0)
+                self.next = "leaderBoard"
+                self.done = True
+            
+            # se o mouse clicar e estivar no quit, tocar efeito sonoro e sair
+            elif ((position[0] > 25 and position[0] < 220) and (position[1] > 510 and position[1] < 585)):
+                mixer.music.load(path.join("sounds","entrada_leaderboard.wav"))
+                mixer.music.play(1,0.0)
+                pygame.quit()
+                exit()
+
+    def update(self, screen, dt):
+        self.draw(screen)
+    def draw(self, screen):
+        screen.fill((0,0,0))
+        screen.blit(main_menu, (0, 0))
+
+class leaderBoard(Status_Game):
     def __init__(self):
         Status_Game.__init__(self)
         self.next = "leaderBoard"
-
     def Pygame_Evento(self, event):
-        global Start, RedY, AzulY, RoxoY, Vacilos, Red_Movimento, \
-            Azul_Movimento, Roxo_Movimento, Pontos, Direito_Pressionado, \
-            Esquerdo_Pressionado, Up_Pressionado
-        Colisao_Red = Colisao(RedX, RedY, 306, 532)
-        Colisao_Azul = Colisao(AzulX, AzulY, 434, 532)
-        Colisao_Roxo = Colisao(530, RoxoY, 562, 532)
+
+        level_1 = pygame.Rect(420 ,420, 300, 110)
+
+        # red = 255 Debug para achar local do botão
+        # blue = 0
+        # green = 0
+        # left = 440
+        # top = 420
+        # width = 300
+        # height = 110
+        # filled = 0
+        # pygame.draw.rect(tela, [red, blue, green], [left, top, width, height], filled)
+        # pygame.display.flip()
+
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            pos = pygame.mouse.get_pos()
+            if level_1.collidepoint(pos):
+                select = mixer.Sound(path.join("sounds","entrada_leaderboard.wav"))
+                select.play()
+                time.sleep(.25)
+                self.next = "leaderBoard"
+                self.done = True
 
         if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_q:
+                select = mixer.Sound(path.join("sounds","entrada_leaderboard.wav"))
+                select.play()
+                time.sleep(.25)
+                self.next = "main_menu"
+                self.done = True
+    def update(self, screen, dt):
+        self.draw(screen)
+    def draw(self, screen):
+        screen.fill((0,0,0))
+        screen.blit(level1, (0, 0))
 
-            # Botão para Iniciar
-            if event.key == pygame.K_SPACE:
-                Start = True
 
-            # Botão Esquerdo
-            if event.key == pygame.K_LEFT:
-                Esquerdo_Pressionado = True
-                if Colisao_Red:
-                    # SOM sound = mixer.Sound(path.join("Game Assets", "collison.wav"))
-                    # sound.play()
-                    Pontos += 1
-                    RedY = random.randint(-1472, -128)
-                    Aumentar_Dificuldade()
-                    Red_Movimento = random.uniform(IntervaloA, IntervaloB)
 
-            # Botão Direiro
-            if event.key == pygame.K_RIGHT:
-                Direito_Pressionado = True
-                if Colisao_Azul:
-                    # SOM sound = mixer.Sound(path.join("Game Assets", "collison.wav"))
-                    # sound.play()
-                    Pontos += 1
-                    AzulY = random.randint(-1472, -128)
-                    Aumentar_Dificuldade()
-                    Azul_Movimento = random.uniform(IntervaloA, IntervaloB)
 
-            # Botão UP
-            if event.key == pygame.K_UP:
-                Up_Pressionado = True
-                if Colisao_Roxo:
-                    # SOM sound = mixer.Sound(path.join("Game Assets", "collison.wav"))
-                    # sound.play()
-                    Pontos += 1
-                    RoxoY = random.randint(1472, -128)
-                    Aumentar_Dificuldade()
-                    Roxo_Movimento = random.uniform(IntervaloA, IntervaloB)
 
-            # Botão de Reset
-            if event.key == pygame.K_r:
-                Pontos = 0
-                Vacilos = 0
-                Reset()
+
+# Classe do Nível
+# class Level(Status_Game):
+#     def __init__(self):
+#         Status_Game.__init__(self)
+#         self.next = "leaderBoard"
+
+#     def Pygame_Evento(self, event):
+#         global Start, RedY, AzulY, RoxoY, Vacilos, Red_Movimento, \
+#             Azul_Movimento, Roxo_Movimento, Pontos, Direito_Pressionado, \
+#             Esquerdo_Pressionado, Up_Pressionado
+#         Colisao_Red = Colisao(RedX, RedY, 306, 532)
+#         Colisao_Azul = Colisao(AzulX, AzulY, 434, 532)
+#         Colisao_Roxo = Colisao(530, RoxoY, 562, 532)
+
+#         if event.type == pygame.KEYDOWN:
+
+#             # Botão para Iniciar
+#             if event.key == pygame.K_SPACE:
+#                 Start = True
+
+#             # Botão Esquerdo
+#             if event.key == pygame.K_LEFT:
+#                 Esquerdo_Pressionado = True
+#                 if Colisao_Red:
+#                     # SOM sound = mixer.Sound(path.join("Game Assets", "collison.wav"))
+#                     # sound.play()
+#                     Pontos += 1
+#                     RedY = random.randint(-1472, -128)
+#                     Aumentar_Dificuldade()
+#                     Red_Movimento = random.uniform(IntervaloA, IntervaloB)
+
+#             # Botão Direiro
+#             if event.key == pygame.K_RIGHT:
+#                 Direito_Pressionado = True
+#                 if Colisao_Azul:
+#                     # SOM sound = mixer.Sound(path.join("Game Assets", "collison.wav"))
+#                     # sound.play()
+#                     Pontos += 1
+#                     AzulY = random.randint(-1472, -128)
+#                     Aumentar_Dificuldade()
+#                     Azul_Movimento = random.uniform(IntervaloA, IntervaloB)
+
+#             # Botão UP
+#             if event.key == pygame.K_UP:
+#                 Up_Pressionado = True
+#                 if Colisao_Roxo:
+#                     # SOM sound = mixer.Sound(path.join("Game Assets", "collison.wav"))
+#                     # sound.play()
+#                     Pontos += 1
+#                     RoxoY = random.randint(1472, -128)
+#                     Aumentar_Dificuldade()
+#                     Roxo_Movimento = random.uniform(IntervaloA, IntervaloB)
+
+#             # Botão de Reset
+#             if event.key == pygame.K_r:
+#                 Pontos = 0
+#                 Vacilos = 0
+#                 Reset()
 
             # Adiciocar opção de voltar a tela anterior com botão
             # if event.key == pygame.K_q:
@@ -283,85 +289,87 @@ class Level(Status_Game):
             #     self.next = "Ver o q é"
 
             # Setando Teclas False como default
-            if event.type == pygame.KEYUP:
-                if event.key == pygame.K_LEFT:
-                    Esquerdo_Pressionado = False
+    #         if event.type == pygame.KEYUP:
+    #             if event.key == pygame.K_LEFT:
+    #                 Esquerdo_Pressionado = False
 
-                if event.key == pygame.K_RIGHT:
-                    Direito_Pressionado = False
+    #             if event.key == pygame.K_RIGHT:
+    #                 Direito_Pressionado = False
 
-                if event.key == pygame.K_UP:
-                    Up_Pressionado = False
+    #             if event.key == pygame.K_UP:
+    #                 Up_Pressionado = False
 
-    def Update(self, Tela):
-        self.draw(Tela)
-        global RedY, AzulY, RoxoY, Vacilos, Red_Movimento, Roxo_Movimento, Azul_Movimento, Recorde
+    # def Update(self, Tela):
+    #     self.draw(Tela)
+    #     global RedY, AzulY, RoxoY, Vacilos, Red_Movimento, Roxo_Movimento, Azul_Movimento, Recorde
 
-        if Start == False:
-            Pressione_Start()
+    #     if Start == False:
+    #         Pressione_Start()
 
-        if RedY >= 574:
-            # Percas = mixer.Sound(path.join("Game Assets","missed.wav"))
-            # Percas.play()
-            Vacilos += 1
-            RedY = random.randint(-1472, -128)
+    #     if RedY >= 574:
+    #         # Percas = mixer.Sound(path.join("Game Assets","missed.wav"))
+    #         # Percas.play()
+    #         Vacilos += 1
+    #         RedY = random.randint(-1472, -128)
 
-        if AzulY >= 574:
-            # Percas = mixer.Sound(path.join("Game Assets","missed.wav"))
-            # Percas.play()
-            Vacilos += 1
-            AzulY = random.randint(-1472, -128)
+    #     if AzulY >= 574:
+    #         # Percas = mixer.Sound(path.join("Game Assets","missed.wav"))
+    #         # Percas.play()
+    #         Vacilos += 1
+    #         AzulY = random.randint(-1472, -128)
 
-        if RoxoY >= 574:
-            # Percas = mixer.Sound(path.join("Game Assets","missed.wav"))
-            # Percas.play()
-            Vacilos += 1
-            RoxoY = random.randint(-1472, -128)
+    #     if RoxoY >= 574:
+    #         # Percas = mixer.Sound(path.join("Game Assets","missed.wav"))
+    #         # Percas.play()
+    #         Vacilos += 1
+    #         RoxoY = random.randint(-1472, -128)
 
-        if Vacilos == 7:  # Número de Vidas
-            Game_Over()
+    #     if Vacilos == 7:  # Número de Vidas
+    #         Game_Over()
 
-            RedY = -64
-            Red_Movimento = 0
+    #         RedY = -64
+    #         Red_Movimento = 0
 
-            AzulY = -64
-            Azul_Movimento = 0
+    #         AzulY = -64
+    #         Azul_Movimento = 0
 
-            RoxoY = -64
-            Roxo_Movimento = 0
+    #         RoxoY = -64
+    #         Roxo_Movimento = 0
 
-            if Pontos > Recorde:
-                Recorde = Pontos
+    #         if Pontos > Recorde:
+    #             Recorde = Pontos
 
-        while Start:
-            RedY += Red_Movimento
-            RoxoY += Roxo_Movimento
-            AzulY += Azul_Movimento
-            break
+    #     while Start:
+    #         RedY += Red_Movimento
+    #         RoxoY += Roxo_Movimento
+    #         AzulY += Azul_Movimento
+    #         break
 
-    def draw(self, Tela):
+    # def draw(self, Tela):
 
-        global Esquerdo_Pressionado, Direito_Pressionado, Up_Pressionado
-        Tela.fill((0, 0, 0))
-        Tela.blit(Fundo_Fase, (0, 0))  # Imagem de fundo da Fase
-        Bloco_Red.Insert(RedImg, RedX, RedY), Bloco_Azul.Insert(AzulImg, AzulX, AzulY), Bloco_Roxo.Insert(RoxoImg,RoxoX, RoxoY)
+    #     Fundo_Fase = pygame.image.load(path.join("images", "jesuis.png"))
 
-        if Esquerdo_Pressionado == True:
-            Tela.blit(EsquerdoB[1], (274, 532))
-        elif Esquerdo_Pressionado == False:
-            Tela.blit(EsquerdoB[0], (274, 532))
+    #     global Esquerdo_Pressionado, Direito_Pressionado, Up_Pressionado
+    #     Tela.fill((0, 0, 0))
+    #     Tela.blit(Fundo_Fase, (0, 0))  # Imagem de fundo da Fase
+    #     Bloco_Red.Insert(RedImg, RedX, RedY), Bloco_Azul.Insert(AzulImg, AzulX, AzulY), Bloco_Roxo.Insert(RoxoImg,RoxoX, RoxoY)
 
-        elif Direito_Pressionado == True:
-            Tela.blit(DireitoB[1], (530, 532))
-        elif Direito_Pressionado == False:
-            Tela.blit(DireitoB[0], (530, 532))
+    #     if Esquerdo_Pressionado == True:
+    #         Tela.blit(EsquerdoB[1], (274, 532))
+    #     elif Esquerdo_Pressionado == False:
+    #         Tela.blit(EsquerdoB[0], (274, 532))
 
-        elif Up_Pressionado == True:
-            Tela.blit(UpB[1], (530, 532))
-        elif Up_Pressionado == False:
-            Tela.blit(UpB[0], (530, 532))
+    #     elif Direito_Pressionado == True:
+    #         Tela.blit(DireitoB[1], (530, 532))
+    #     elif Direito_Pressionado == False:
+    #         Tela.blit(DireitoB[0], (530, 532))
 
-        Mostrar_Pontos(TextoX, TextoY), Mostrar_Vacilos(VacilosX, VacilosY, 6), Recorde_Pessoal(AltoX, AltoY, "Level")
+    #     elif Up_Pressionado == True:
+    #         Tela.blit(UpB[1], (530, 532))
+    #     elif Up_Pressionado == False:
+    #         Tela.blit(UpB[0], (530, 532))
+
+    #     Mostrar_Pontos(TextoX, TextoY), Mostrar_Vacilos(VacilosX, VacilosY, 6), Recorde_Pessoal(AltoX, AltoY, "Level")
 
 
 class Controle_Jogo:
@@ -390,7 +398,7 @@ class Controle_Jogo:
             self.Troca()
         self.state.update(self.Tela, df)
 
-    def Loop(self):
+    def Loop_De_Eventos(self):
         for Eventos in pygame.event.get():
             if Eventos.type == pygame.QUIT:
                 self.done = True
@@ -399,15 +407,14 @@ class Controle_Jogo:
     def Loop_Principal(self):
         while not self.done:
             Tempo = self.clock.tick(120) / 1000.0
-            self.Loop()
+            self.Loop_De_Eventos()
             self.Update(Tempo)
             pygame.display.update()
 
 Game = Controle_Jogo()
 levels = {
     'main_menu': Menu(),
-    'leaderBoard': leaderBoard(),
-    'Level': Level()
+    'leaderBoard': leaderBoard()
 }
 
 Game.Setup(levels, 'main_menu')
