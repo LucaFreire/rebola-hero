@@ -221,8 +221,7 @@ class leaderBoard(Status_Game):
         self.next = "leaderBoard"
     def Pygame_Evento(self, event):
 
-        level_1 = pygame.Rect(50, 290, 190, 200)
-
+        level_1 = pygame.Rect(508, 380, 600, 450)
         if event.type == pygame.MOUSEBUTTONDOWN:
             pos = pygame.mouse.get_pos()
             if level_1.collidepoint(pos):
@@ -242,14 +241,42 @@ class leaderBoard(Status_Game):
 
     def update(self, screen, dt):
         self.draw(screen)
+        ButtonGroups.update()
+        ButtonGroups.draw(tela)
     def draw(self, screen):
         screen.fill((0,0,0))
         screen.blit(level1, (0, 0))
 
+class Botao(pygame.sprite.Sprite):
+    def __init__(self,*groups):
+        super().__init__(*groups)
 
+        self.image = pygame.image.load("images/20 (1).png").convert_alpha()
+        self.image = pygame.transform.scale(self.image , [264, 96])
+        self.rect = pygame.Rect(264, 96,264, 96)
+        self.rect = self.image.get_rect()
 
+        self.image1 = pygame.image.load("images/20 (1).png").convert_alpha()
+        self.image2 = pygame.image.load("images/20 (2).png").convert_alpha()
 
+        self.touche = True
+    def update(self):
+        self.mouse = pygame.mouse.get_pressed()
+        self.MousePos = pygame.mouse.get_pos()
 
+        if self.rect.collidepoint(self.MousePos):
+            if self.mouse[0]:
+                self.touche = True
+                pygame.mouse.get_rel()
+                self.image = self.image2
+            else:
+                self.touche = False
+                self.image = self.image1
+        pass
+
+ButtonGroups = pygame.sprite.Group()
+Button1 = Botao(ButtonGroups)
+Button1.rect.center = (600, 500)
 
 # Classe do Nível
 # class Level(Status_Game):
