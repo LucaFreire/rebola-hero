@@ -1,3 +1,6 @@
+from operator import contains
+import re
+from tarfile import REGULAR_TYPES
 import pygame
 import random
 from os import path
@@ -8,6 +11,7 @@ import time
 from pygame import mixer
 
 pygame.init()
+relogio = pygame.time.Clock()
 
 tela = pygame.display.set_mode((800, 600))
 pontos_atuais = 0
@@ -15,6 +19,27 @@ pontos_atuais = 0
 level1 = pygame.image.load("./images/jesuis.png").convert_alpha()
 main_menu = pygame.image.load("./images/07.png").convert_alpha()
 fonte = pygame.font.Font('disposabledroid-bb.regular.ttf', 108)
+image_sprite = [pygame.image.load("./images/00.png"),
+                pygame.image.load("./images/01.png"),
+                pygame.image.load("./images/02.png"),
+                pygame.image.load("./images/03.png"),
+                pygame.image.load("./images/04.png"),
+                pygame.image.load("./images/05.png"),
+                pygame.image.load("./images/06.png"),
+                pygame.image.load("./images/07.png"),
+                pygame.image.load("./images/08.png"),
+                pygame.image.load("./images/09.png"),
+                pygame.image.load("./images/10.png"),
+                pygame.image.load("./images/11.png"),
+                pygame.image.load("./images/12.png"),
+                pygame.image.load("./images/13.png"),
+                pygame.image.load("./images/14.png"),
+                pygame.image.load("./images/15.png"),
+                pygame.image.load("./images/16.png"),
+                pygame.image.load("./images/17.png"),
+                pygame.image.load("./images/18.png"),
+                pygame.image.load("./images/19.png"),
+                pygame.image.load("./images/20.png")]
 
 start = False
 pontuacao = 0
@@ -28,6 +53,8 @@ vacilosX = 10
 vacilosY = 55
 intervaloA = 2.8
 intervaloB = 3.8
+frame_atual = 0
+reagulador_de_fps = 0
 
 class Bloco:
     def __init__(self, Img, ImgX, ImgY):
@@ -145,9 +172,12 @@ class Menu(Status_Game):
     def __init__(self):
         Status_Game.__init__(self)
         self.next = "main_menu"
-    def Pygame_Evento(self, event):
+        mixer.music.load(path.join("sounds","favela_bc.mp3"))
+        mixer.music.play(1,0.0)
+
         
-        if event.type == pygame.MOUSEBUTTONDOWN:
+    def Pygame_Evento(self, event):
+        if event.type == pygame.MOUSEBUTTONUP:
             position = pygame.mouse.get_pos() 
 
             # Se o mouse clicar e estiver na área do start, tocar efeito sonoto e desativa menu
@@ -164,8 +194,23 @@ class Menu(Status_Game):
                 pygame.quit()
                 exit()
 
+
     def update(self, screen, dt):
-        self.draw(screen)
+        global frame_atual
+        global reagulador_de_fps
+
+        Game.clock.tick(13)
+        # Volta para primeira imagem, gerando o loop
+        if frame_atual >= len(image_sprite):
+            frame_atual = 0
+
+        # Seta a imagem atual
+        image = image_sprite[frame_atual]
+        frame_atual += 1
+    
+        # Da o update na tela
+        screen.blit(image, (0, 0))
+
     def draw(self, screen):
         screen.fill((0,0,0))
         screen.blit(main_menu, (0, 0))
@@ -194,6 +239,7 @@ class leaderBoard(Status_Game):
                 time.sleep(.25)
                 self.next = "main_menu"
                 self.done = True
+
     def update(self, screen, dt):
         self.draw(screen)
     def draw(self, screen):
