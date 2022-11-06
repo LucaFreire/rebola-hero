@@ -1,5 +1,0 @@
-C:\Users\hemer\OneDrive\Área de Trabalho\menu\menu\obj\Debug\net6.0\menu.csproj.AssemblyReference.cache
-C:\Users\hemer\OneDrive\Área de Trabalho\menu\menu\obj\Debug\net6.0\menu.GeneratedMSBuildEditorConfig.editorconfig
-C:\Users\hemer\OneDrive\Área de Trabalho\menu\menu\obj\Debug\net6.0\menu.AssemblyInfoInputs.cache
-C:\Users\hemer\OneDrive\Área de Trabalho\menu\menu\obj\Debug\net6.0\menu.AssemblyInfo.cs
-C:\Users\hemer\OneDrive\Área de Trabalho\menu\menu\obj\Debug\net6.0\menu.csproj.CoreCompileInputs.cache
