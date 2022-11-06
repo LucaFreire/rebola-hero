@@ -1,4 +1,3 @@
-
 from operator import contains
 import re
 from tarfile import REGULAR_TYPES
