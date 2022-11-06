@@ -14,11 +14,10 @@ pygame.init()
 relogio = pygame.time.Clock()
 
 tela = pygame.display.set_mode((800, 600))
-pontos_atuais = 0
 
 level1 = pygame.image.load("./images/jesuis.png").convert_alpha()
 main_menu = pygame.image.load("./images/07.png").convert_alpha()
-fonte = pygame.font.Font('disposabledroid-bb.regular.ttf', 108)
+fonte = pygame.font.Font('fonte.ttf', 108)
 image_sprite = [pygame.image.load("./images/00.png"),
                 pygame.image.load("./images/01.png"),
                 pygame.image.load("./images/02.png"),
@@ -42,7 +41,7 @@ image_sprite = [pygame.image.load("./images/00.png"),
                 pygame.image.load("./images/20.png")]
 
 start = False
-pontos = 0
+pontos_atuais = 0
 textoX = 10
 textoY = 10
 recorde = 15
@@ -66,7 +65,7 @@ class Bloco:
         tela.blit(Img, (ImgX, ImgY))
 
 def Pressione_Start():
-    Enter_Start = fonte.render("Pressione ENTER P/ Iniciar", True, (255, 0, 0))  # Mensagem
+    Enter_Start = fonte.render("Pressione SPACE P/ Iniciar", True, (255, 0, 0))  # Mensagem
     tela.blit(Enter_Start, (130, 280))  # Localização da Mensagem
 
 def Mostrar_Pontos(x, y):
@@ -230,10 +229,11 @@ class leaderBoard(Status_Game):
                 select.play()
                 self.next = "leaderBoard"
                 self.done = True
+                
             if ButtonBack.touche == False:
                 ButtonBack.touche = True
                 self.next = "main_menu"
-                self.done = True   ##########################################
+                self.done = True   
                 
             if ButtonPlay.touche == False:
                 ButtonBack.touche = True
@@ -303,7 +303,6 @@ class BotaoRetornar(pygame.sprite.Sprite):
                 self.touche = False
         pass
 
-
 class BotaoPlay(pygame.sprite.Sprite):
     def __init__(self,*groups):
         super().__init__(*groups)
@@ -331,9 +330,6 @@ class BotaoPlay(pygame.sprite.Sprite):
 ButtonGroups = pygame.sprite.Group()
 ButtonPlay = BotaoPlay(ButtonGroups)
 ButtonBack = BotaoRetornar(ButtonGroups)
-
-
-
 
 # Classe do Nível
 class Level(Status_Game):
