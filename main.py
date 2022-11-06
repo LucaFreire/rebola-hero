@@ -17,7 +17,7 @@ tela = pygame.display.set_mode((800, 600))
 
 level1 = pygame.image.load("./images/jesuis.png").convert_alpha()
 main_menu = pygame.image.load("./images/07.png").convert_alpha()
-fonte = pygame.font.Font('fonte.ttf', 108)
+fonte = pygame.font.Font('./images/fonte.ttf', 108)
 image_sprite = [pygame.image.load("./images/00.png"),
                 pygame.image.load("./images/01.png"),
                 pygame.image.load("./images/02.png"),
