@@ -42,8 +42,8 @@ image_sprite = [pygame.image.load("./images/00.png"),
 
 start = False
 pontos_atuais = 0
-textoX = 10
-textoY = 10
+textoX = 45
+textoY = 45
 recorde = 15
 recordeX = 10
 recordeY = 100
@@ -235,7 +235,7 @@ class leaderBoard(Status_Game):
                 self.next = "main_menu"
                 self.done = True   
                 
-            if ButtonPlay.touche == False:
+            if ButtonPlay.touche == False: ###############
                 ButtonBack.touche = True
                 self.next = "level"
                 self.done = True   
@@ -471,17 +471,17 @@ class Level(Status_Game):
         if Esquerdo_Pressionado == True:
             Tela.blit(EsquerdoB[1], (274, 532))
         elif Esquerdo_Pressionado == False:
-            Tela.blit(EsquerdoB[0], (274, 532))
+            Tela.blit(EsquerdoB[1], (274, 532))
 
         elif Direito_Pressionado == True:
             Tela.blit(DireitoB[1], (530, 532))
         elif Direito_Pressionado == False:
-            Tela.blit(DireitoB[0], (530, 532))
+            Tela.blit(DireitoB[1], (530, 532))
 
         elif Up_Pressionado == True:
             Tela.blit(UpB[1], (530, 532))
         elif Up_Pressionado == False:
-            Tela.blit(UpB[0], (530, 532))
+            Tela.blit(UpB[1], (530, 532))
 
         Mostrar_Pontos(textoX, textoY), Mostrar_Vacilos(vacilosX, vacilosY, 6), Recorde_Pessoal(textoX, textoY, "level")
 
