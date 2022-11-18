@@ -529,6 +529,10 @@ class Controle_Jogo:
             self.update(Tempo)
             pygame.display.update()
 
+class Game_Over:
+    def __init__(self):
+        Status_Game.__init__(self)
+
 Game = Controle_Jogo()
 levels = {
     'main_menu': Menu(),
