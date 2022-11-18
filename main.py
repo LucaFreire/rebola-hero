@@ -115,21 +115,15 @@ Bloco_Roxo = Bloco(RoxoImg, RoxoX, RoxoY)
 
 # Botão Esquerdo
 EsquerdoImg = pygame.image.load(path.join("images", "botao_esquerdo.png")).convert_alpha()
-Esquerdo_Pressionado_Img = pygame.image.load(path.join("images", "botao_esquerdo_pressionado.png"))
-EsquerdoB = [EsquerdoImg, Esquerdo_Pressionado_Img]
-Esquerdo_Pressionado = False
+EsquerdoB = pygame.image.load(path.join("images", "botao_esquerdo_pressionado.png"))
 
 # Botão Direito
 DireitoImg = pygame.image.load(path.join("images", "botao_direito.png")).convert_alpha()
-Direito_Pressionado_Img = pygame.image.load(path.join("images", "botao_direito_pressionado.png"))
-DireitoB = [DireitoImg, Direito_Pressionado_Img]
-Direito_Pressionado = False
+DireitoB = pygame.image.load(path.join("images", "botao_direito_pressionado.png"))
 
 # Botão Up
 UpImg = pygame.image.load(path.join("images", "botao_cima.png")).convert_alpha()
-Up_Pressionado_Img = pygame.image.load(path.join("images", "botao_cima_pressionado.png"))
-UpB = [UpImg, Up_Pressionado_Img]
-Up_Pressionado = False
+UpB = pygame.image.load(path.join("images", "botao_cima_pressionado.png"))
 
 # Sistema de Colisão
 def Colisao(BlocoX, BlocoY, BotaoX, BotaoY):
@@ -357,7 +351,6 @@ class Level(Status_Game):
 
             # Botão Esquerdo
             if event.key == pygame.K_LEFT:
-                Esquerdo_Pressionado = True
                 if Colisao_Red:
                     # SOM sound = mixer.Sound(path.join("Game Assets", "collison.wav"))
                     # sound.play()
@@ -368,7 +361,6 @@ class Level(Status_Game):
 
             # Botão Direiro
             if event.key == pygame.K_RIGHT:
-                Direito_Pressionado = True
                 if Colisao_Azul:
                     # SOM sound = mixer.Sound(path.join("Game Assets", "collison.wav"))
                     # sound.play()
@@ -379,7 +371,6 @@ class Level(Status_Game):
 
             # Botão UP
             if event.key == pygame.K_UP:
-                Up_Pressionado = True
                 if Colisao_Roxo:
                     # SOM sound = mixer.Sound(path.join("Game Assets", "collison.wav"))
                     # sound.play()
@@ -405,17 +396,6 @@ class Level(Status_Game):
                 start = False
                 self.done = True
                 self.next = "level"
-
-            #Setando Teclas False como default
-            if event.type == pygame.KEYUP:
-                if event.key == pygame.K_LEFT:
-                    Esquerdo_Pressionado = False
-
-                if event.key == pygame.K_RIGHT:
-                    Direito_Pressionado = False
-
-                if event.key == pygame.K_UP:
-                    Up_Pressionado = False
 
     def update(self, Tela):
         self.draw(Tela)
@@ -467,26 +447,13 @@ class Level(Status_Game):
 
         Fundo_Fase = pygame.image.load(path.join("images", "jesuis.png"))
 
-        global Esquerdo_Pressionado, Direito_Pressionado, Up_Pressionado
         Tela.fill((0, 0, 0))
         Tela.blit(Fundo_Fase, (0, 0))  # Imagem de fundo da Fase
+        Tela.blit(EsquerdoB, (RedX, altura_botoes))
+        Tela.blit(DireitoB, (AzulX, altura_botoes))
+        Tela.blit(UpB, (RoxoX, altura_botoes))
+
         Bloco_Red.Insert(RedImg, RedX, RedY), Bloco_Azul.Insert(AzulImg, AzulX, AzulY), Bloco_Roxo.Insert(RoxoImg,RoxoX, RoxoY)
-
-        if Esquerdo_Pressionado == True:
-            Tela.blit(EsquerdoB[1], (RedX, altura_botoes))
-        elif Esquerdo_Pressionado == False:
-            Tela.blit(EsquerdoB[0], (RedX, altura_botoes))
-
-        if Direito_Pressionado == True:
-            Tela.blit(DireitoB[1], (AzulX, altura_botoes))
-        elif Direito_Pressionado == False:
-            Tela.blit(DireitoB[0], (AzulX, altura_botoes))
-
-        if Up_Pressionado == True:
-            Tela.blit(UpB[1], (RoxoX, altura_botoes))
-        elif Up_Pressionado == False:
-            Tela.blit(UpB[0], (RoxoX, altura_botoes))
-
         Mostrar_Pontos(textoX, textoY), Mostrar_Vacilos(vacilosX, vacilosY, 7), Recorde_Pessoal(recordeX, recordeY, "level")
 
 
