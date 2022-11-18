@@ -18,6 +18,8 @@ tela = pygame.display.set_mode((800, 600))
 level1 = pygame.image.load("./images/jesuis.png").convert_alpha()
 main_menu = pygame.image.load("./images/07.png").convert_alpha()
 fonte = pygame.font.Font('./images/fonte.ttf', 108)
+fontePequena = pygame.font.Font('./images/fonte.ttf', 54)
+
 image_sprite = [pygame.image.load("./images/00.png"),
                 pygame.image.load("./images/01.png"),
                 pygame.image.load("./images/02.png"),
@@ -46,14 +48,15 @@ textoX = 10
 textoY = 10
 recorde = 15
 recordeX = 10
-recordeY = 100
+recordeY = 50
 vacilos = 0 
 vacilosX = 10
-vacilosY = 55
+vacilosY = 100
 intervaloA = 2.8
 intervaloB = 3.8
 frame_atual = 0
 reagulador_de_fps = 0
+altura_botoes = 532
 
 class Bloco:
     def __init__(self, Img, ImgX, ImgY):
@@ -65,33 +68,33 @@ class Bloco:
         tela.blit(Img, (ImgX, ImgY))
 
 def Pressione_Start():
-    Enter_Start = fonte.render("Pressione SPACE P/ Iniciar", True, (255, 0, 0))  # Mensagem
+    Enter_Start = fontePequena.render("Pressione SPACE P/ Iniciar", True, (255, 0, 0))  # Mensagem
     tela.blit(Enter_Start, (130, 280))  # Localização da Mensagem
 
 def Mostrar_Pontos(x, y):
-    Ponto = fonte.render("Pontuação: " + str(pontos_atuais), True, (0, 255, 0))
+    Ponto = fontePequena.render("Pontos: " + str(pontos_atuais), True, (0, 0, 255))
+    
     tela.blit(Ponto, (x, y))
 
 def Recorde_Pessoal(x, y, level):
-    AltoS = fonte.render(f"Recorde: {recorde}",[level], True, (255, 255, 0))
+    AltoS = fontePequena.render(f"Recorde: {recorde}", True, (0, 0, 255))
     tela.blit(AltoS, (x, y))
 
 def Mostrar_Vacilos(x, y, num):
-    Vacilo = fonte.render("Vacilos: " + str(vacilos) + "/" + str(num), True, (255, 0, 0))
+    Vacilo = fontePequena.render("Vacilos: " + str(vacilos) + "/" + str(num), True, (0, 0, 255))
     tela.blit(Vacilo, (x, y))
 
 def Game_Over():
-    Game_Over_Texto = fonte.render("Perdeu Playboy", True, (255, 0, 0))
+    Game_Over_Texto = fontePequena.render("Perdeu Playboy", True, (255, 0, 0))
     tela.blit(Game_Over_Texto, (160, 250))
-    Reset_Text = fonte.render("Pressione 'R' P/ REINICIAR", True, (255, 255, 255))
+    Reset_Text = fontePequena.render("Pressione 'R' P/ REINICIAR", True, (255, 255, 255))
     tela.blit(Reset_Text, (200, 350))
-    Retorno_Texto = fonte.render("Pressione 'F' P/ SAIR")
+    Retorno_Texto = fontePequena.render("Pressione 'F' P/ SAIR")
     tela.blit(Retorno_Texto, (205, 400))
 
 # Blocos Vermelhos
 RedImg = pygame.image.load(path.join("images", "bloco_vermelho.png")).convert()
 RedX = 274
-RedY = 274
 RedY = random.randint(-1472, -128)
 Red_Movimento = random.uniform(intervaloA, intervaloB)
 Bloco_Red = Bloco(RedImg, RedX, RedY)
@@ -105,7 +108,7 @@ Bloco_Azul = Bloco(AzulImg, AzulX, AzulY)
 
 # Blocos Roxo
 RoxoImg = pygame.image.load(path.join("images", "bloco_roxo.png")).convert()
-RoxoX = 402
+RoxoX = 368
 RoxoY = random.randint(-1472, -128)
 Roxo_Movimento = random.uniform(intervaloA, intervaloB)
 Bloco_Roxo = Bloco(RoxoImg, RoxoX, RoxoY)
@@ -341,9 +344,10 @@ class Level(Status_Game):
         global start, RedY, AzulY, RoxoY, Vacilos, Red_Movimento, \
             Azul_Movimento, Roxo_Movimento, pontos_atuais, Direito_Pressionado, \
             Esquerdo_Pressionado, Up_Pressionado
-        Colisao_Red = Colisao(RedX, RedY, 306, 532)
-        Colisao_Azul = Colisao(AzulX, AzulY, 434, 532)
-        Colisao_Roxo = Colisao(530, RoxoY, 562, 532)
+
+        Colisao_Red = Colisao(RedX, RedY, RedX, altura_botoes)
+        Colisao_Azul = Colisao(AzulX, AzulY, AzulX, altura_botoes)
+        Colisao_Roxo = Colisao(RoxoX, RoxoY, RoxoX, altura_botoes)
 
         if event.type == pygame.KEYDOWN:
 
@@ -380,7 +384,7 @@ class Level(Status_Game):
                     # SOM sound = mixer.Sound(path.join("Game Assets", "collison.wav"))
                     # sound.play()
                     pontos_atuais += 1
-                    RoxoY = random.randint(1472, -128)
+                    RoxoY = random.randint(-1472, -128)
                     Aumentar_Dificuldade()
                     Roxo_Movimento = random.uniform(intervaloA, intervaloB)
 
@@ -469,21 +473,21 @@ class Level(Status_Game):
         Bloco_Red.Insert(RedImg, RedX, RedY), Bloco_Azul.Insert(AzulImg, AzulX, AzulY), Bloco_Roxo.Insert(RoxoImg,RoxoX, RoxoY)
 
         if Esquerdo_Pressionado == True:
-            Tela.blit(EsquerdoB[1], (274, 532))
+            Tela.blit(EsquerdoB[1], (RedX, altura_botoes))
         elif Esquerdo_Pressionado == False:
-            Tela.blit(EsquerdoB[0], (274, 532))
+            Tela.blit(EsquerdoB[0], (RedX, altura_botoes))
 
-        elif Direito_Pressionado == True:
-            Tela.blit(DireitoB[1], (530, 532))
+        if Direito_Pressionado == True:
+            Tela.blit(DireitoB[1], (AzulX, altura_botoes))
         elif Direito_Pressionado == False:
-            Tela.blit(DireitoB[0], (530, 532))
+            Tela.blit(DireitoB[0], (AzulX, altura_botoes))
 
-        elif Up_Pressionado == True:
-            Tela.blit(UpB[1], (530, 532))
+        if Up_Pressionado == True:
+            Tela.blit(UpB[1], (RoxoX, altura_botoes))
         elif Up_Pressionado == False:
-            Tela.blit(UpB[0], (530, 532))
+            Tela.blit(UpB[0], (RoxoX, altura_botoes))
 
-        Mostrar_Pontos(textoX, textoY), Mostrar_Vacilos(vacilosX, vacilosY, 6), Recorde_Pessoal(textoX, textoY, "level")
+        Mostrar_Pontos(textoX, textoY), Mostrar_Vacilos(vacilosX, vacilosY, 7), Recorde_Pessoal(recordeX, recordeY, "level")
 
 
 class Controle_Jogo:
