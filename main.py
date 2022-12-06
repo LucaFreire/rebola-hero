@@ -84,14 +84,6 @@ def Mostrar_Vacilos(x, y, num):
     Vacilo = fontePequena.render("Vacilos: " + str(vacilos) + "/" + str(num), True, (0, 0, 255))
     tela.blit(Vacilo, (x, y))
 
-def Game_Over():
-    Game_Over_Texto = fontePequena.render("Perdeu Playboy", True, (255, 0, 0))
-    tela.blit(Game_Over_Texto, (160, 250))
-    Reset_Text = fontePequena.render("Pressione 'R' P/ REINICIAR", True, (255, 255, 255))
-    tela.blit(Reset_Text, (200, 350))
-    Retorno_Texto = fontePequena.render("Pressione 'F' P/ SAIR")
-    tela.blit(Retorno_Texto, (205, 400))
-
 # Blocos Vermelhos
 RedImg = pygame.image.load(path.join("images", "bloco_vermelho.png")).convert()
 RedX = 274
@@ -142,19 +134,7 @@ def Aumentar_Dificuldade():
         intervaloB += 0.45
 
 # Reseta Tudo
-def Reset():
-    global intervaloA, intervaloB, RedX,RedY, Red_Movimento, AzulX, Azul_Movimento, RoxoX, Roxo_Movimento
-    intervaloA = 2.8
-    intervaloB = 3.8
 
-    RedY = random.randint(-1472, -128)
-    Red_Movimento = random.uniform(intervaloA, intervaloB)
-
-    AzulX = random.randint(-1472, -128)
-    Azul_Movimento = random.uniform(intervaloA, intervaloB)
-
-    RoxoX = random.randint(-1472, -128)
-    Roxo_Movimento = random.uniform(intervaloA, intervaloB)
 
 # Classe Status do Game
 class Status_Game:
@@ -167,7 +147,7 @@ class Status_Game:
 class Menu(Status_Game):
     def __init__(self):
         Status_Game.__init__(self)
-        self.next = "main_menu"
+        self.next = "level"
         mixer.music.load(path.join("sounds","favela_bc.mp3"))
         mixer.music.play(1,0.0)
 
@@ -178,20 +158,20 @@ class Menu(Status_Game):
 
             # Se o mouse clicar e estiver na área do start, tocar efeito sonoto e desativa menu
             if ((position[0] > 25 and position[0] < 220) and (position[1] > 373 and position[1] < 449)):
-                mixer.music.load(path.join("sounds","entrada_leaderboard.wav"))
+                mixer.music.load(path.join("sounds","favela_bc.mp3"))
                 mixer.music.play(1,0.0)
-                self.next = "leaderBoard"
+                self.next = "level"
                 self.done = True
             
             # se o mouse clicar e estivar no quit, tocar efeito sonoro e sair
             elif ((position[0] > 25 and position[0] < 220) and (position[1] > 510 and position[1] < 585)):
-                mixer.music.load(path.join("sounds","entrada_leaderboard.wav"))
+                mixer.music.load(path.join("sounds","favela_bc.mp3"))
                 mixer.music.play(1,0.0)
                 pygame.quit()
                 exit()
 
 
-    def update(self, screen):
+    def update(self, Tela):
         global frame_atual
         global reagulador_de_fps
 
@@ -205,134 +185,19 @@ class Menu(Status_Game):
         frame_atual += 1
     
         # Da o update na tela
-        screen.blit(image, (0, 0))
+        Tela.blit(image, (0, 0))
 
-    def draw(self, screen):
-        screen.fill((0,0,0))
-        screen.blit(main_menu, (0, 0))
-
-class leaderBoard(Status_Game):
-    def __init__(self):
-        Status_Game.__init__(self)
-        self.next = "leaderBoard"
-    def Pygame_Evento(self, event):
-
-        #area de previsao de botao
-        rect_bos = ButtonPlay.rect
-        if event.type == pygame.MOUSEBUTTONDOWN:
-            pos = pygame.mouse.get_pos()
-            if rect_bos.collidepoint(pos):
-                select = mixer.Sound(path.join("sounds","entrada_leaderboard.wav"))
-                select.play()
-                self.next = "leaderBoard"
-                self.done = True
-                
-            if ButtonBack.touche == False:
-                ButtonBack.touche = True
-                self.next = "main_menu"
-                self.done = True   
-                
-            if ButtonPlay.touche == False:
-                ButtonBack.touche = True
-                self.next = "level"
-                self.done = True   
-                
-        if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_q:
-                select = mixer.Sound(path.join("sounds","entrada_leaderboard.wav"))
-                select.play()
-                self.next = "main_menu"
-                self.done = True
-
-
-    def update(self, screen):
-        self.draw(screen)
-        ButtonPlay.rect.center = (600, 500)
-        ButtonGroups.update()
-        ButtonGroups.draw(tela)
-
-    def draw(self, screen):
-        screen.fill((0,0,0))
-        screen.blit(level1, (0, 0))
-
-class BotaoLeaderboard(pygame.sprite.Sprite):
-    def __init__(self,*groups):
-        super().__init__(*groups)
-
-        self.image = pygame.image.load("images/20 (1).png").convert_alpha()
-        self.image = pygame.transform.scale(self.image , [264, 96])
-        self.rect = self.image.get_rect(center=(600,450))
-        self.image1 = pygame.image.load("images/20 (1).png").convert_alpha()
-        self.image2 = pygame.image.load("images/20 (2).png").convert_alpha()
-
-        self.touche = True
-    def update(self):
-        self.mouse = pygame.mouse.get_pressed()
-        self.MousePos = pygame.mouse.get_pos()
-
-        if self.rect.collidepoint(self.MousePos):
-            if self.mouse[0]:
-                self.touche = True
-                self.image = self.image2
-            else:
-                self.touche = False
-                self.image = self.image
-        pass
-    
-class BotaoRetornar(pygame.sprite.Sprite):
-    def __init__(self,*groups):
-        super().__init__(*groups)
-
-        self.image = pygame.image.load("images/botao_retornar.png").convert_alpha()
-        self.image = pygame.transform.scale(self.image , [54,54])
-        self.rect = pygame.Rect(54,54,54,54)
-        self.rect = self.image.get_rect()
-        self.touche = True
-    def update(self):
-        self.mouse = pygame.mouse.get_pressed()
-        self.MousePos = pygame.mouse.get_pos()
-
-        if self.rect.collidepoint(self.MousePos):
-            if self.mouse[0]:
-                self.touche = True
-                pygame.mouse.get_rel()
-            else:
-                self.touche = False
-        pass
-
-class BotaoPlay(pygame.sprite.Sprite):
-    def __init__(self,*groups):
-        super().__init__(*groups)
-
-        self.image = pygame.image.load("images/20 (1).png").convert_alpha()
-        self.image = pygame.transform.scale(self.image , [264, 96])
-        self.rect = self.image.get_rect(center=(600,450))
-        self.image1 = pygame.image.load("images/20 (1).png").convert_alpha()
-        self.image2 = pygame.image.load("images/20 (2).png").convert_alpha()
-
-        self.touche = True
-    def update(self):
-        self.mouse = pygame.mouse.get_pressed()
-        self.MousePos = pygame.mouse.get_pos()
-
-        if self.rect.collidepoint(self.MousePos):
-            if self.mouse[0]:
-                self.touche = True
-                self.image = self.image2
-            else:
-                self.touche = False
-                self.image = self.image
-        pass
-    
-ButtonGroups = pygame.sprite.Group()
-ButtonPlay = BotaoPlay(ButtonGroups)
-ButtonBack = BotaoRetornar(ButtonGroups)
+    def draw(self, Tela):
+        Tela.fill((0,0,0))
+        Tela.blit(main_menu, (0, 0))
 
 # Classe do Nível
 class Level(Status_Game):
     def __init__(self):
         Status_Game.__init__(self)
         self.next = "level"
+        mixer.music.load(path.join("sounds","MusicTue.mp3"))
+        mixer.music.play(1,0.0)
 
     def Pygame_Evento(self, event):
         global start, RedY, AzulY, RoxoY, Vacilos, Red_Movimento, \
@@ -379,27 +244,9 @@ class Level(Status_Game):
                     Aumentar_Dificuldade()
                     Roxo_Movimento = random.uniform(intervaloA, intervaloB)
 
-            # Botão de Reset
-            if event.key == pygame.K_r:
-                pontos_atuais = 0
-                Vacilos = 0
-                Reset()
-
-            #Adiciocar opção de voltar a tela anterior com botão
-            if event.key == pygame.K_q:
-                Vacilos = 0
-                pontos_atuais = 0
-                Reset()
-                # select = mixer.Sound(path.join("Game Assets","select.wav"))
-                # select.play()
-                time.sleep(.25)
-                start = False
-                self.done = True
-                self.next = "level"
-
     def update(self, Tela):
         self.draw(Tela)
-        global RedY, AzulY, RoxoY, vacilos, Red_Movimento, Roxo_Movimento, Azul_Movimento, Recorde
+        global RedY, AzulY, RoxoY, vacilos, Red_Movimento, Roxo_Movimento, Azul_Movimento, recorde, start, pontos_atuais
 
         if start == False:
             Pressione_Start()
@@ -423,7 +270,6 @@ class Level(Status_Game):
             RoxoY = random.randint(-1472, -128)
 
         if vacilos == 7:  # Número de Vidas
-            Game_Over()
 
             RedY = -64
             Red_Movimento = 0
@@ -434,8 +280,28 @@ class Level(Status_Game):
             RoxoY = -64
             Roxo_Movimento = 0
 
-            if pontos_atuais > Recorde:
-                Recorde = pontos_atuais
+            if pontos_atuais > recorde:
+                recorde = pontos_atuais
+
+            time.sleep(0.5)
+            start = False
+            pontos_atuais = 0
+            vacilos = 0
+
+            intervaloA = 2.8
+            intervaloB = 3.8
+
+            RoxoX = random.randint(-1472, -128)
+            RedY = random.randint(-1472, -128)
+            AzulX = random.randint(-1472, -128)
+            Red_Movimento = random.uniform(intervaloA, intervaloB)
+
+            Azul_Movimento = random.uniform(intervaloA, intervaloB)
+
+            Roxo_Movimento = random.uniform(intervaloA, intervaloB)
+
+            self.done = True
+            self.next = "main_menu"
 
         while start:
             RedY += Red_Movimento
@@ -496,14 +362,10 @@ class Controle_Jogo:
             self.update(Tempo)
             pygame.display.update()
 
-class Game_Over:
-    def __init__(self):
-        Status_Game.__init__(self)
 
 Game = Controle_Jogo()
 levels = {
     'main_menu': Menu(),
-    'leaderBoard': leaderBoard(), 
     'level':Level()
 }
 
