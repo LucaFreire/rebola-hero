@@ -311,7 +311,7 @@ class Level(Status_Game):
 
     def draw(self, Tela):
 
-        Fundo_Fase = pygame.image.load(path.join("images", "jesuis.png"))
+        Fundo_Fase = pygame.image.load(path.join("images", "framejogo.png"))
 
         Tela.fill((0, 0, 0))
         Tela.blit(Fundo_Fase, (0, 0))  # Imagem de fundo da Fase
