@@ -246,26 +246,27 @@ class Level(Status_Game):
 
     def update(self, Tela):
         self.draw(Tela)
-        global RedY, AzulY, RoxoY, vacilos, Red_Movimento, Roxo_Movimento, Azul_Movimento, recorde, start, pontos_atuais
+        global RedY, AzulY, RoxoY, vacilos, Red_Movimento, Roxo_Movimento, Azul_Movimento, \
+        recorde, start, pontos_atuais, intervaloA, intervaloB
 
         if start == False:
             Pressione_Start()
 
         if RedY >= 574:
-            # Percas = mixer.Sound(path.join("Game Assets","missed.wav"))
-            # Percas.play()
+            Percas = mixer.Sound(path.join("sounds","perca.wav"))
+            Percas.play()
             vacilos += 1
             RedY = random.randint(-1472, -128)
 
         if AzulY >= 574:
-            # Percas = mixer.Sound(path.join("Game Assets","missed.wav"))
-            # Percas.play()
+            Percas = mixer.Sound(path.join("sounds","perca.wav"))
+            Percas.play()
             vacilos += 1
             AzulY = random.randint(-1472, -128)
 
         if RoxoY >= 574:
-            # Percas = mixer.Sound(path.join("Game Assets","missed.wav"))
-            # Percas.play()
+            Percas = mixer.Sound(path.join("sounds","perca.wav"))
+            Percas.play()
             vacilos += 1
             RoxoY = random.randint(-1472, -128)
 
