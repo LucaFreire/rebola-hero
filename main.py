@@ -15,7 +15,6 @@ relogio = pygame.time.Clock()
 
 tela = pygame.display.set_mode((800, 600))
 
-level1 = pygame.image.load("./images/jesuis.png").convert_alpha()
 main_menu = pygame.image.load("./images/07.png").convert_alpha()
 fonte = pygame.font.Font('./images/fonte.ttf', 108)
 fontePequena = pygame.font.Font('./images/fonte.ttf', 54)
@@ -157,15 +156,12 @@ Roxo_Movimento = random.uniform(intervaloA, intervaloB)
 Bloco_Roxo = Bloco(RoxoImg, RoxoX, RoxoY)
 
 # Botão Esquerdo
-EsquerdoImg = pygame.image.load(path.join("images", "botao_esquerdo.png")).convert_alpha()
 EsquerdoB = pygame.image.load(path.join("images", "botao_esquerdo_pressionado.png"))
 
 # Botão Direito
-DireitoImg = pygame.image.load(path.join("images", "botao_direito.png")).convert_alpha()
 DireitoB = pygame.image.load(path.join("images", "botao_direito_pressionado.png"))
 
 # Botão Up
-UpImg = pygame.image.load(path.join("images", "botao_cima.png")).convert_alpha()
 UpB = pygame.image.load(path.join("images", "botao_cima_pressionado.png"))
 
 # Sistema de Colisão
