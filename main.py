@@ -20,6 +20,47 @@ main_menu = pygame.image.load("./images/07.png").convert_alpha()
 fonte = pygame.font.Font('./images/fonte.ttf', 108)
 fontePequena = pygame.font.Font('./images/fonte.ttf', 54)
 
+reboletas_sprite = [pygame.image.load("./images/reboletas/1.png"),
+                    pygame.image.load("./images/reboletas/2.png"),
+                    pygame.image.load("./images/reboletas/3.png"),
+                    pygame.image.load("./images/reboletas/4.png"),
+                    pygame.image.load("./images/reboletas/5.png"),
+                    pygame.image.load("./images/reboletas/6.png"),
+                    pygame.image.load("./images/reboletas/7.png"),
+                    pygame.image.load("./images/reboletas/8.png"),
+                    pygame.image.load("./images/reboletas/9.png"),
+                    pygame.image.load("./images/reboletas/10.png"),
+                    pygame.image.load("./images/reboletas/11.png"),
+                    pygame.image.load("./images/reboletas/12.png"),
+                    pygame.image.load("./images/reboletas/13.png"),
+                    pygame.image.load("./images/reboletas/14.png"),
+                    pygame.image.load("./images/reboletas/15.png"),
+                    pygame.image.load("./images/reboletas/16.png"),
+                    pygame.image.load("./images/reboletas/17.png"),
+                    pygame.image.load("./images/reboletas/18.png"),
+                    pygame.image.load("./images/reboletas/19.png"),
+                    pygame.image.load("./images/reboletas/20.png"),
+                    pygame.image.load("./images/reboletas/21.png"),
+                    pygame.image.load("./images/reboletas/22.png"),
+                    pygame.image.load("./images/reboletas/23.png"),
+                    pygame.image.load("./images/reboletas/24.png"),
+                    pygame.image.load("./images/reboletas/25.png"),
+                    pygame.image.load("./images/reboletas/26.png"),
+                    pygame.image.load("./images/reboletas/27.png"),
+                    pygame.image.load("./images/reboletas/28.png"),
+                    pygame.image.load("./images/reboletas/29.png"),
+                    pygame.image.load("./images/reboletas/30.png"),
+                    pygame.image.load("./images/reboletas/31.png"),
+                    pygame.image.load("./images/reboletas/32.png"),
+                    pygame.image.load("./images/reboletas/33.png"),
+                    pygame.image.load("./images/reboletas/34.png"),
+                    pygame.image.load("./images/reboletas/35.png"),
+                    pygame.image.load("./images/reboletas/36.png"),
+                    pygame.image.load("./images/reboletas/37.png"),
+                    pygame.image.load("./images/reboletas/38.png"),
+                    pygame.image.load("./images/reboletas/39.png"),
+                    pygame.image.load("./images/reboletas/40.png")]
+
 image_sprite = [pygame.image.load("./images/00.png"),
                 pygame.image.load("./images/01.png"),
                 pygame.image.load("./images/02.png"),
@@ -42,11 +83,19 @@ image_sprite = [pygame.image.load("./images/00.png"),
                 pygame.image.load("./images/19.png"),
                 pygame.image.load("./images/20.png")]
 
+fundolas_sprite = [pygame.image.load("./images/fundolas/r1.png"),
+                pygame.image.load("./images/fundolas/r2.png"),
+                pygame.image.load("./images/fundolas/r3.png"),
+                pygame.image.load("./images/fundolas/r4.png"),
+                pygame.image.load("./images/fundolas/r5.png"),
+                pygame.image.load("./images/fundolas/r6.png")]
+
 start = False
 pontos_atuais = 0
 textoX = 10
 textoY = 10
-recorde = 15
+recorde = open("rec.txt","r").readlines()[0]
+recorde3 = recorde
 recordeX = 10
 recordeY = 50
 vacilos = 0 
@@ -57,6 +106,8 @@ intervaloB = 3.8
 frame_atual = 0
 reagulador_de_fps = 0
 altura_botoes = 532
+frame_atual2 = 0
+fundolas_atual = 0
 
 class Bloco:
     def __init__(self, Img, ImgX, ImgY):
@@ -69,7 +120,7 @@ class Bloco:
 
 def Pressione_Start():
     Enter_Start = fontePequena.render("Pressione SPACE P/ Iniciar", True, (255, 0, 0))  # Mensagem
-    tela.blit(Enter_Start, (130, 280))  # Localização da Mensagem
+    tela.blit(Enter_Start, (10, 480))  # Localização da Mensagem
 
 def Mostrar_Pontos(x, y):
     Ponto = fontePequena.render("Pontos: " + str(pontos_atuais), True, (0, 0, 255))
@@ -77,7 +128,7 @@ def Mostrar_Pontos(x, y):
     tela.blit(Ponto, (x, y))
 
 def Recorde_Pessoal(x, y, level):
-    AltoS = fontePequena.render(f"Recorde: {recorde}", True, (0, 0, 255))
+    AltoS = fontePequena.render(f"Recorde: {recorde3}", True, (0, 0, 255))
     tela.blit(AltoS, (x, y))
 
 def Mostrar_Vacilos(x, y, num):
@@ -191,18 +242,70 @@ class Menu(Status_Game):
         Tela.fill((0,0,0))
         Tela.blit(main_menu, (0, 0))
 
+
+Personagem = [pygame.image.load("./images/personagem/1.png"),
+                pygame.image.load("./images/personagem/2.png"),
+                pygame.image.load("./images/personagem/3.png"),
+                pygame.image.load("./images/personagem/4.png"),
+                pygame.image.load("./images/personagem/5.png"),
+                pygame.image.load("./images/personagem/6.png"),
+                pygame.image.load("./images/personagem/7.png"),
+                pygame.image.load("./images/personagem/8.png"),
+                pygame.image.load("./images/personagem/9.png"),
+                pygame.image.load("./images/personagem/10.png"),
+                pygame.image.load("./images/personagem/11.png"),
+                pygame.image.load("./images/personagem/12.png"),
+                pygame.image.load("./images/personagem/13.png"),
+                pygame.image.load("./images/personagem/14.png"),
+                pygame.image.load("./images/personagem/15.png"),
+                pygame.image.load("./images/personagem/16.png"),
+                pygame.image.load("./images/personagem/17.png"),
+                pygame.image.load("./images/personagem/18.png"),
+                pygame.image.load("./images/personagem/19.png"),
+                pygame.image.load("./images/personagem/20.png"),
+                pygame.image.load("./images/personagem/21.png"),
+                pygame.image.load("./images/personagem/22.png"),
+                pygame.image.load("./images/personagem/23.png"),
+                pygame.image.load("./images/personagem/24.png"),
+                pygame.image.load("./images/personagem/25.png"),
+                pygame.image.load("./images/personagem/26.png"),
+                pygame.image.load("./images/personagem/27.png"),
+                pygame.image.load("./images/personagem/28.png"),
+                pygame.image.load("./images/personagem/29.png"),
+                pygame.image.load("./images/personagem/30.png"),
+                pygame.image.load("./images/personagem/31.png"),
+                pygame.image.load("./images/personagem/32.png"),
+                pygame.image.load("./images/personagem/33.png"),
+                pygame.image.load("./images/personagem/34.png"),
+                pygame.image.load("./images/personagem/35.png"),
+                pygame.image.load("./images/personagem/36.png"),
+                pygame.image.load("./images/personagem/37.png"),
+                pygame.image.load("./images/personagem/38.png"),
+                pygame.image.load("./images/personagem/39.png"),
+                pygame.image.load("./images/personagem/40.png"),
+                pygame.image.load("./images/personagem/41.png"),
+                pygame.image.load("./images/personagem/42.png"),
+                pygame.image.load("./images/personagem/43.png"),
+                pygame.image.load("./images/personagem/44.png"),
+                pygame.image.load("./images/personagem/45.png"),
+                pygame.image.load("./images/personagem/46.png"),
+                pygame.image.load("./images/personagem/47.png"),
+                pygame.image.load("./images/personagem/48.png")]
+
+
 # Classe do Nível
 class Level(Status_Game):
     def __init__(self):
         Status_Game.__init__(self)
         self.next = "level"
+        frame_atual2 = 0
         mixer.music.load(path.join("sounds","MusicTue.mp3"))
         mixer.music.play(1,0.0)
 
     def Pygame_Evento(self, event):
         global start, RedY, AzulY, RoxoY, Vacilos, Red_Movimento, \
             Azul_Movimento, Roxo_Movimento, pontos_atuais, Direito_Pressionado, \
-            Esquerdo_Pressionado, Up_Pressionado
+            Esquerdo_Pressionado, Up_Pressionado, frame_atual2
 
         Colisao_Red = Colisao(RedX, RedY, RedX, altura_botoes)
         Colisao_Azul = Colisao(AzulX, AzulY, AzulX, altura_botoes)
@@ -243,14 +346,26 @@ class Level(Status_Game):
                     RoxoY = random.randint(-1472, -128)
                     Aumentar_Dificuldade()
                     Roxo_Movimento = random.uniform(intervaloA, intervaloB)
+            frame_atual2 += 1
 
     def update(self, Tela):
         self.draw(Tela)
         global RedY, AzulY, RoxoY, vacilos, Red_Movimento, Roxo_Movimento, Azul_Movimento, \
-        recorde, start, pontos_atuais, intervaloA, intervaloB
+        recorde, start, pontos_atuais, intervaloA, intervaloB, frame_atual2, fundolas_atual, recorde3
 
+        
         if start == False:
             Pressione_Start()
+
+        if (frame_atual2 == 48):
+            frame_atual2 = 0
+            image_sprite2 = Personagem[frame_atual2]
+        else:
+            image_sprite2 = Personagem[frame_atual2]
+
+        image_sprite2 = pygame.transform.scale(image_sprite2, (150,300))
+
+        Tela.blit(image_sprite2, (480, 190))
 
         if RedY >= 574:
             Percas = mixer.Sound(path.join("sounds","perca.wav"))
@@ -281,8 +396,10 @@ class Level(Status_Game):
             RoxoY = -64
             Roxo_Movimento = 0
 
-            if pontos_atuais > recorde:
-                recorde = pontos_atuais
+            if pontos_atuais > int(recorde):
+                recorde = open("rec.txt", "w")
+                recorde = recorde.write(str(pontos_atuais))
+                recorde3 = pontos_atuais
 
             time.sleep(0.5)
             start = False
@@ -312,7 +429,14 @@ class Level(Status_Game):
 
     def draw(self, Tela):
 
-        Fundo_Fase = pygame.image.load(path.join("images", "framejogo.png"))
+        global fundolas_atual
+
+        if (int(fundolas_atual) == 39):
+            Fundo_Fase = reboletas_sprite[int(fundolas_atual)]
+            fundolas_atual = 0
+        else:
+            Fundo_Fase = reboletas_sprite[int(fundolas_atual)]
+            fundolas_atual += 0.05
 
         Tela.fill((0, 0, 0))
         Tela.blit(Fundo_Fase, (0, 0))  # Imagem de fundo da Fase
