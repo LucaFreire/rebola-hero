@@ -1,2 +1,2 @@
 # RebolaHero
-Jogo musical de recorde
+Musical game
